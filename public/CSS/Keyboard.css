@@ -1,0 +1,45 @@
+.keyboard-container{
+    z-index: 1031;
+    display: none;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 53%;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+    /*overflow: auto;*/
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.keyboard-key {
+    width: 60px;
+    height: 60px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 20px;
+}
+
+.keyboard-key:hover {
+    background-color: #e0e0e0;
+}
+
+.spacebar-key {
+    width: 180px;
+}
+
+.backspace-key,
+.enter-key {
+    width: 120px;
+}

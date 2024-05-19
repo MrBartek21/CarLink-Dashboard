@@ -1,0 +1,56 @@
+.bg-player{
+    background-color: #1e1e1e !important; /* Ciemny kolor tła dla .bg-player */
+}
+
+#musicDiv{
+	border-top-left-radius: 0 !important;
+	border-top-right-radius: 0 !important;
+	border-bottom-left-radius: .25rem !important;
+	border-bottom-right-radius: .25rem !important;
+}
+
+
+.now{
+    color: #ffcc00 !important; /* Kolor tekstu dla .now */
+    font-weight: bold; /* Pogrubienie tekstu */
+    background-color: #5500FF !important; /* Nowy kolor tła dla .now */
+    padding: 10px !important; /* Zwiększenie wewnętrznego odstępu */
+    border-radius: 8px !important; /* Zaokrąglenie rogów */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1) !important; /* Cień */
+    position: sticky; /* Ustawienie pozycji jako sticky */
+    top: 0; /* Przyklej element do górnej krawędzi */
+    z-index: 1; /* Ustawienie indeksu z powodu nakładania się elementów */
+}
+
+.col-sm-12{
+    color: #ffffff; /* Kolor tekstu biały */
+    padding: 10px; /* Zwiększenie wewnętrznego odstępu */
+    border-radius: 8px; /* Zaokrąglenie rogów */
+    margin-bottom: 10px; /* Dodanie odstępu między elementami */
+    background-color: #282828; /* Kolor tła */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Cień */
+}
+
+.col-sm-12:nth-child(2n+1){
+    background: #313131; /* Tło ciemniejsze */
+}
+
+.col-sm-12:nth-child(2n+2){
+    background: #363636; /* Tło ciemniejsze */
+}
+
+
+.vertical-scrollable {
+    height: 290px;
+    overflow-y: scroll;
+}
+
+/* Dostosowanie paska przewijania */
+.vertical-scrollable::-webkit-scrollbar {
+    width: 8px; /* Szerokość paska przewijania */
+}
+
+.vertical-scrollable::-webkit-scrollbar-thumb {
+    background-color: #6c757d; /* Kolor kciuka przewijania */
+    border-radius: 10px; /* Zaokrąglenie rogów kciuka przewijania */
+}

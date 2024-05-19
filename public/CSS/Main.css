@@ -1,0 +1,69 @@
+#menuTile{
+    margin-top: 10px;
+}
+
+.btn-tile{
+    font-size: 1.5rem;
+	margin-top: 5px;
+	border-radius: 40px;
+    width: 100%;
+}
+
+.sysinfo{
+    height: 435px;
+    overflow-y: scroll;
+}
+
+/* Dostosowanie paska przewijania */
+.sysinfo::-webkit-scrollbar {
+    width: 8px; /* Szerokość paska przewijania */
+}
+
+.sysinfo::-webkit-scrollbar-thumb {
+    background-color: #6c757d; /* Kolor kciuka przewijania */
+    border-radius: 10px; /* Zaokrąglenie rogów kciuka przewijania */
+}
+
+
+.logs-scrollable {
+    height: 435px !important;
+    overflow-y: scroll !important;
+}
+
+.logs-scrollable::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+.logs-scrollable::-webkit-scrollbar-thumb {
+    background-color: #6c757d !important;
+    border-radius: 10px !important;
+}
+
+
+
+.text-bold {
+    font-weight: bold;
+}
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+    }
+}
+#video {
+    width: 626px;
+    height: 470px;
+}
+
+.camera {
+    display: grid;
+    place-items: center; /* Centrowanie wideo */
+}
