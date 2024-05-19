@@ -49,7 +49,7 @@ app.get('/Music/:filename', (req, res) => {
 // WebSocket dla przesyłania danych w czasie rzeczywistym
 const wss = new WebSocket.Server({ port: 8080 });
 
-wss.on('connection', function connection(ws) {
+wss.on('connection', function connection(ws){
     const port = new SerialPort('/dev/ttyUSB0', { baudRate: 115200 });
 
     port.on('data', function(data) {
