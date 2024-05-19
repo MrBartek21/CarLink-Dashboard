@@ -50,7 +50,6 @@ app.get('/Music/:filename', (req, res) => {
 const wss = new WebSocket.Server({ port: 8080 });
 
 wss.on('connection', function connection(ws) {
-    // Połączenie nawiązane, otwórz port USB
     const port = new SerialPort('/dev/ttyUSB0', { baudRate: 115200 });
 
     port.on('data', function(data) {
