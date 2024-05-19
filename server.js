@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 
-const SerialPort = require('serialport');
+const SerialPort = require('serialport').SerialPort;
 const WebSocket = require('ws');
 const os = require('os');
 
@@ -18,11 +18,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/playlist', (req, res) => {
     const musicDir = path.join(__dirname, 'Music');
     fs.readdir(musicDir, (err, files) => {
-      if (err) {
-        console.error('Error reading music directory:', err);
-        res.status(500).send('Internal Server Error');
-        return;
-      }
+        if(err){
+            console.error('Error reading music directory:', err);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
       const playlist = files
         .filter(file => file.endsWith('.mp3'))
         .map(file => {
@@ -35,7 +35,7 @@ app.get('/playlist', (req, res) => {
         });
       res.json(playlist);
     });
-  });
+});
 
 // Endpoint do obsługi plików muzycznych
 app.get('/Music/:filename', (req, res) => {
@@ -44,36 +44,54 @@ app.get('/Music/:filename', (req, res) => {
     
     // Serwowanie pliku muzycznego
     res.sendFile(filePath);
-  });
+});
 
 
 // WebSocket dla przesyłania danych w czasie rzeczywistym
 const wss = new WebSocket.Server({ port: 8080 });
 
-wss.on('connection', function connection(ws) {
+wss.on('connection', function connection(ws){
   let portPath;
 
-  if (os.platform() === 'win32') {
-      portPath = 'COM3'; // Przykładowy port dla Windows, dostosuj według potrzeb
-  } else {
-      portPath = '/dev/ttyUSB0'; // Przykładowy port dla Linux, dostosuj według potrzeb
-  }
+  if(os.platform() === 'win32') portPath = 'COM5';
+  else portPath = '/dev/ttyUSB0';
+  
+  try{
+    const port = new SerialPort({path: portPath, baudRate: 115200 });
 
-  try {
-      const port = new SerialPort(portPath, { baudRate: 115200 });
+    port.on('data', function (data){
+      ws.send(data.toString());
+    });
 
-      port.on('data', function (data) {
-          // Odebrano dane z portu USB, przekaż je przez WebSocket do klienta
-          ws.send(data.toString());
-      });
+    port.on('error', function (err){
+      ws.send(JSON.stringify({ error: 'Serial port error: ' + err.message }));
+    });
 
-      port.on('error', function (err) {
-          console.error('Serial port error:', err);
-          ws.send(JSON.stringify({ error: 'Serial port error: ' + err.message }));
-      });
-  } catch (err) {
-      console.error('Error opening serial port:', err);
-      ws.send(JSON.stringify({ error: 'Error opening serial port: ' + err.message }));
+    /*let buffer = '';
+    port.on('data', function (data) {
+      const newData = data.toString();
+
+      if(buffer === '' && newData.startsWith('{')) buffer = newData;
+      else buffer += newData;
+      
+      // Sprawdzenie, czy bufor zawiera pełny obiekt JSON (zaczyna się od "{" i kończy na "}")
+      if(buffer.startsWith('{') && buffer.endsWith('}')){
+        console.log('Merged data:', buffer); // Wyświetlanie scalonych danych w konsoli
+
+        // Przekaż scalone dane przez WebSocket do klienta
+        ws.send(buffer);
+
+        buffer = ''; // Wyczyść bufor po przesłaniu danych
+      }
+    });*/
+  
+  
+    ws.on('close', function () {
+      console.log('WebSocket connection closed');
+      port.close();
+  });
+  }catch(err){
+    ws.send(JSON.stringify({ error: 'Error opening serial port: ' + err.message }));
   }
 });
 
@@ -122,5 +140,5 @@ app.post('/action/restart', (req, res) => {
 
 // Startowanie serwera
 app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
