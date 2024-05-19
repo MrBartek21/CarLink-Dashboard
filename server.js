@@ -4,6 +4,7 @@ const fs = require('fs');
 
 const SerialPort = require('serialport');
 const WebSocket = require('ws');
+const os = require('os');
 
 const { SystemInfo } = require('./utils/SystemInfo');
 
@@ -49,13 +50,31 @@ app.get('/Music/:filename', (req, res) => {
 // WebSocket dla przesyłania danych w czasie rzeczywistym
 const wss = new WebSocket.Server({ port: 8080 });
 
-wss.on('connection', function connection(ws){
-    const port = new SerialPort('/dev/ttyUSB0', { baudRate: 115200 });
+wss.on('connection', function connection(ws) {
+  let portPath;
 
-    port.on('data', function(data) {
-        // Odebrano dane z portu USB, przekaż je przez WebSocket do klienta
-        ws.send(data.toString());
-    });
+  if (os.platform() === 'win32') {
+      portPath = 'COM3'; // Przykładowy port dla Windows, dostosuj według potrzeb
+  } else {
+      portPath = '/dev/ttyUSB0'; // Przykładowy port dla Linux, dostosuj według potrzeb
+  }
+
+  try {
+      const port = new SerialPort(portPath, { baudRate: 115200 });
+
+      port.on('data', function (data) {
+          // Odebrano dane z portu USB, przekaż je przez WebSocket do klienta
+          ws.send(data.toString());
+      });
+
+      port.on('error', function (err) {
+          console.error('Serial port error:', err);
+          ws.send(JSON.stringify({ error: 'Serial port error: ' + err.message }));
+      });
+  } catch (err) {
+      console.error('Error opening serial port:', err);
+      ws.send(JSON.stringify({ error: 'Error opening serial port: ' + err.message }));
+  }
 });
 
 
