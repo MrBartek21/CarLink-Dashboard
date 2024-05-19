@@ -11,7 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
-    "kioskboard": "^2.3.0"
+    "kioskboard": "^2.3.0",
+    "serialport": "^12.0.0",
+    "ws": "^8.17.0"
   },
   "description": ""
 }
