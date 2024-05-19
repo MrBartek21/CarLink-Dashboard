@@ -1,4 +1,3 @@
-// Tworzenie nowego obiektu WebSocket
 const socket = new WebSocket('ws://localhost:8080');
 
 // Obsługa zdarzenia otwarcia połączenia WebSocket
