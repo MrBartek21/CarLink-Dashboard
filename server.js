@@ -51,7 +51,7 @@ const wss = new WebSocket.Server({ port: 8080 });
 
 wss.on('connection', function connection(ws) {
     // Połączenie nawiązane, otwórz port USB
-    const port = new SerialPort('/dev/ttyUSB0', { baudRate: 9600 });
+    const port = new SerialPort('/dev/ttyUSB0', { baudRate: 115200 });
 
     port.on('data', function(data) {
         // Odebrano dane z portu USB, przekaż je przez WebSocket do klienta
