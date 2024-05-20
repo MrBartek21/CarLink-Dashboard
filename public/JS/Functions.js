@@ -81,9 +81,9 @@ function fetchData(){
             // Dodanie nagłówków kolumn
             const headerRow = document.createElement('tr');
             const variableHeader = document.createElement('th');
-            variableHeader.textContent = "Zmienna";
+            variableHeader.textContent = "Variable";
             const valueHeader = document.createElement('th');
-            valueHeader.textContent = "Wartość";
+            valueHeader.textContent = "Value";
             headerRow.appendChild(variableHeader);
             headerRow.appendChild(valueHeader);
             thead.appendChild(headerRow);
