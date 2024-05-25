@@ -4,9 +4,12 @@ socket.addEventListener('open', function (event){
     log('log', 'USBManager', 'WebSocket connection established');
 });
 
+
 let buffer = '';
 socket.addEventListener('message', function (event){
     const newData = event.data;
+    const usbIcon = document.querySelector('#usbIcon');
+    const gpsIcon = document.querySelector('#gpsIcon');
 
     if(buffer === '' && newData.includes('{')) buffer += newData.slice(newData.indexOf('{'));
     else buffer += newData;
@@ -23,6 +26,8 @@ socket.addEventListener('message', function (event){
             const dataValue = parsedData.data;
 
             if(dataType == "gps"){
+                gpsIcon.style.display = "inline";
+
                 const table = createTable(dataValue);
                 const dataDisplay = document.querySelector('.gpsinfo');
                 dataDisplay.innerHTML = '';
@@ -47,6 +52,7 @@ socket.addEventListener('message', function (event){
             buffer = '';
         }catch (error){
             log("error", "USB", error);
+            gpsIcon.style.display = "none";
         }
     }
 });
