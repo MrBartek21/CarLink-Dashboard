@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.19.2",
     "kioskboard": "^2.3.0",
+    "noble": "^1.9.1",
     "serialport": "^12.0.0",
     "ws": "^8.17.0"
   },
