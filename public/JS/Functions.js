@@ -58,33 +58,6 @@ function log(type="log", source="null", message){
     logsDiv.appendChild(newRow);
 }
 
-/*async function fetchBluetoothDevices() {
-    try {
-        const response = await fetch('/api/devices');
-        const devices = await response.json();
-        console.log(devices);
-        displayDevices(devices);
-    } catch (error) {
-        console.error('Błąd podczas pobierania urządzeń Bluetooth:', error);
-    }
-}
-
-function displayDevices(devices) {
-    const devicesList = document.getElementById('devicesList');
-    devicesList.innerHTML = ''; // Czyści listę urządzeń
-
-    devices.forEach(device => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${device.name} (${device.address})`;
-        devicesList.appendChild(listItem);
-    });
-}
-
-document.getElementById('fetchButton').addEventListener('click', fetchBluetoothDevices);
-*/
-
-
-
 function fetchData(){
     const sysInfoDiv = document.querySelector('.sysinfo');
     const tempCPUNavDiv = document.querySelector('.tempCPUNav');
@@ -153,9 +126,25 @@ function fetchData(){
 
                 tr.appendChild(variableCell);
                 tr.appendChild(valueCell);
+                tbody.appendChild(tr);
 
-                // Sprawdzenie czy istnieje zmienna CpuTemperature
-                if(key === 'CpuTemperature'){
+
+
+                if(key === 'System_Voltage'){
+                    try{
+                        const decodejson = JSON.parse(data[key]);
+                        const voltage = decodejson.voltage;
+
+                        if(!decodejson.error){
+                            if(voltage.undervoltage == true) undervoltageIcon.style.display = "inline";
+                            else undervoltageIcon.style.display = "none";
+                        }
+                    }catch(error){
+                        log('error', 'fetchData', 'Błąd podczas przetwarzania zmiennej Voltage '+error);
+                    }
+                }
+
+                if(key === 'System_CpuTemperature'){
                     try{
                         decodejson = JSON.parse(data[key]);
 
@@ -170,21 +159,7 @@ function fetchData(){
                     }
                 }
 
-                if(key === 'Voltage'){
-                    try{
-                        const decodejson = JSON.parse(data[key]);
-                        const voltage = decodejson.voltage;
-
-                        if(!decodejson.error){
-                            if(voltage.undervoltage == true) undervoltageIcon.style.display = "inline";
-                            else undervoltageIcon.style.display = "none";
-                        }
-                    }catch(error){
-                        log('error', 'fetchData', 'Błąd podczas przetwarzania zmiennej Voltage '+error);
-                    }
-                }
-
-                if(key === 'NetworkStatus'){
+                if(key === 'Network_NetworkStatus'){
                     try{
                         decodejson = JSON.parse(data[key]);
 
@@ -199,12 +174,10 @@ function fetchData(){
                         log('error', 'fetchData', 'Błąd podczas przetwarzania zmiennej NetworkStatus '+error);
                     }
                 }
-
-                tbody.appendChild(tr);
             }
 
             table.appendChild(tbody);
-            sysInfoDiv.innerHTML = ''; // Wyczyszczenie poprzedniej zawartości
+            sysInfoDiv.innerHTML = '';
             sysInfoDiv.appendChild(table);
         })
         .catch(error =>{
