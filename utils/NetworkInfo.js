@@ -119,7 +119,8 @@ class NetworkInfo {
                         if(parts.includes('link/ether')){
                             const macIndex = parts.findIndex(part => part === 'link/ether') + 1;
                             if(macIndex > 0 && macIndex < parts.length){
-                                ethernetConnection.mac = parts[macIndex];
+                                const mac = parts[macIndex].toUpperCase();
+                                ethernetConnection.mac = mac;
                             }
                         }
                     }
