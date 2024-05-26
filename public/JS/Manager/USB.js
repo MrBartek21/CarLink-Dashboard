@@ -51,7 +51,7 @@ socket.addEventListener('message', function (event){
     
             buffer = '';
         }catch (error){
-            log("error", "USB", error);
+            log("error", "USBManager", error);
             gpsIcon.style.display = "none";
         }
     }
@@ -119,4 +119,5 @@ socket.addEventListener('close', function (event){
 
 socket.addEventListener('error', function (event){
     log('error', 'USBManager', 'WebSocket error:'+event);
+    console.log(event);
 });

@@ -7,6 +7,9 @@ const WebSocket = require('ws');
 const os = require('os');
 
 const { SystemInfo } = require('./utils/SystemInfo');
+const { NetworkInfo } = require('./utils/NetworkInfo');
+
+//const noble = require('noble');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -66,25 +69,6 @@ wss.on('connection', function connection(ws){
     port.on('error', function (err){
       ws.send(JSON.stringify({ error: 'Serial port error: ' + err.message }));
     });
-
-    /*let buffer = '';
-    port.on('data', function (data) {
-      const newData = data.toString();
-
-      if(buffer === '' && newData.startsWith('{')) buffer = newData;
-      else buffer += newData;
-      
-      // Sprawdzenie, czy bufor zawiera pełny obiekt JSON (zaczyna się od "{" i kończy na "}")
-      if(buffer.startsWith('{') && buffer.endsWith('}')){
-        console.log('Merged data:', buffer); // Wyświetlanie scalonych danych w konsoli
-
-        // Przekaż scalone dane przez WebSocket do klienta
-        ws.send(buffer);
-
-        buffer = ''; // Wyczyść bufor po przesłaniu danych
-      }
-    });*/
-  
   
     ws.on('close', function () {
       console.log('WebSocket connection closed');
@@ -110,6 +94,12 @@ app.get('/system-info', async (req, res) => {
         systemInfo.MemoryUsage = SystemInfo.getMemoryUsage();
         systemInfo.DiskUsage = await SystemInfo.getDiskUsage();
         systemInfo.NetworkStatus = await SystemInfo.getNetworkStatus();
+
+        // Dodanie informacji o sieci Wi-Fi
+        systemInfo.WifiInfo = await NetworkInfo.getWifiInfo();
+
+        // Dodanie informacji o połączeniu Ethernet
+        systemInfo.EthernetInfo = await NetworkInfo.getEthernetInfo();
         
         res.json(systemInfo);
     }catch (error){
@@ -117,6 +107,37 @@ app.get('/system-info', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+
+/*
+let devices = [];
+// Rozpoczynamy skanowanie, gdy BLE jest włączone
+noble.on('stateChange', (state) => {
+    if (state === 'poweredOn') {
+        noble.startScanning([], true); // true dla ciągłego skanowania
+    } else {
+        noble.stopScanning();
+    }
+});
+
+// Obsługa zdarzenia znalezienia urządzenia
+noble.on('discover', (peripheral) => {
+    const device = {
+        name: peripheral.advertisement.localName || 'Unknown Device',
+        address: peripheral.address
+    };
+    if (!devices.some(d => d.address === device.address)) {
+        devices.push(device);
+        console.log(`Znaleziono urządzenie: ${device.name} (${device.address})`);
+    }
+});
+
+// Endpoint API do pobierania urządzeń Bluetooth
+app.get('/api/devices', (req, res) => {
+  res.json(devices);
+});*/
+
+
 
 app.post('/action/shutdown', (req, res) => {
     exec('sudo shutdown now', (error, stdout, stderr) => {

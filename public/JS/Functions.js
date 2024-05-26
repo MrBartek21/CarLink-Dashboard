@@ -58,6 +58,33 @@ function log(type="log", source="null", message){
     logsDiv.appendChild(newRow);
 }
 
+/*async function fetchBluetoothDevices() {
+    try {
+        const response = await fetch('/api/devices');
+        const devices = await response.json();
+        console.log(devices);
+        displayDevices(devices);
+    } catch (error) {
+        console.error('Błąd podczas pobierania urządzeń Bluetooth:', error);
+    }
+}
+
+function displayDevices(devices) {
+    const devicesList = document.getElementById('devicesList');
+    devicesList.innerHTML = ''; // Czyści listę urządzeń
+
+    devices.forEach(device => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${device.name} (${device.address})`;
+        devicesList.appendChild(listItem);
+    });
+}
+
+document.getElementById('fetchButton').addEventListener('click', fetchBluetoothDevices);
+*/
+
+
+
 function fetchData(){
     const sysInfoDiv = document.querySelector('.sysinfo');
     const tempCPUNavDiv = document.querySelector('.tempCPUNav');
@@ -67,7 +94,7 @@ function fetchData(){
     const bluetoothIcon = document.querySelector('#bluetoothIcon');
     const wifiIcon = document.querySelector('#wifiIcon');
     const usbIcon = document.querySelector('#usbIcon');
-    const gpsIcon = document.querySelector('#gpsIcon');
+    //const gpsIcon = document.querySelector('#gpsIcon');
 
     fetch('/system-info')
         .then(response => response.json())
