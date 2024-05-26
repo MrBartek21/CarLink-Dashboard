@@ -4,6 +4,38 @@ const { exec } = require('child_process');
 class NetworkInfo {
     constructor() {}
 
+    static getIpAddress(){
+        const interfaces = os.networkInterfaces();
+        for(const interfaceName in interfaces) {
+            const iface = interfaces[interfaceName];
+            for(const ifAddr of iface){
+                if(ifAddr.family === 'IPv4' && !ifAddr.internal){
+                    return ifAddr.address;
+                }
+            }
+        }
+        return null;
+    }
+
+    static getNetworkStatus(){
+        return new Promise((resolve, reject) => {
+            exec('ping -c 1 google.com', (error, stdout, stderr) => {
+                if(error){
+                    console.error("Error retrieving network status:", error.message);
+                    resolve(JSON.stringify({ available: false, responseTime: null }));
+                }else{
+                    const match = stdout.match(/time=(\d+\.\d+) ms/); // Szukamy linii zawierającej czas odpowiedzi
+                    if(match && match[1]){
+                        const responseTime = parseFloat(match[1]);
+                        resolve(JSON.stringify({ available: true, responseTime }));
+                    }else{
+                        resolve(JSON.stringify({ available: true, responseTime: null }));
+                    }
+                }
+            });
+        });
+    }
+
     static getWifiInfo(){
         return new Promise((resolve, reject) => {
             exec('iwconfig wlan0', (error, stdout, stderr) => {

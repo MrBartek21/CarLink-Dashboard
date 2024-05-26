@@ -4,21 +4,6 @@ const { exec } = require('child_process');
 class SystemInfo{
     constructor() {}
 
-    // Metoda do pobierania adresu IP lokalnego
-    static getLocalIpAddress(){
-        const interfaces = os.networkInterfaces();
-        for(const interfaceName in interfaces) {
-            const iface = interfaces[interfaceName];
-            for(const ifAddr of iface){
-                if(ifAddr.family === 'IPv4' && !ifAddr.internal){
-                    return ifAddr.address;
-                }
-            }
-        }
-        return null;
-    }
-
-    // Metoda do pobierania stanu napięcia
     static getVoltage(){
         return new Promise((resolve, reject) => {
             exec('vcgencmd get_throttled', (error, stdout, stderr) => {
@@ -38,7 +23,6 @@ class SystemInfo{
         });
     }
 
-    // Metoda do pobierania temperatury CPU
     static getCpuTemperature(){
         return new Promise((resolve, reject) => {
             exec('cat /sys/class/thermal/thermal_zone*/temp', (error, stdout, stderr) => {
@@ -56,16 +40,6 @@ class SystemInfo{
             });
         });
     }
-
-    // Metoda do pobierania informacji o urządzeniach Bluetooth
-    /*static getBluetoothDevices() {
-        const bluetooth = require('node-bluetooth');
-        const devices = bluetooth.devices();
-        return devices.map(device => ({
-            name: device.name,
-            address: device.address
-        }));
-    }*/
 
     static getSystemLoad(){
         return os.loadavg(); // Zwraca tablicę obciążenia systemu w ciągu ostatnich 1, 5 i 15 minut
@@ -123,24 +97,6 @@ class SystemInfo{
         });
     }
 
-    static getNetworkStatus(){
-        return new Promise((resolve, reject) => {
-            exec('ping -c 1 google.com', (error, stdout, stderr) => {
-                if(error){
-                    console.error("Error retrieving network status:", error.message);
-                    resolve(JSON.stringify({ available: false, responseTime: null }));
-                }else{
-                    const match = stdout.match(/time=(\d+\.\d+) ms/); // Szukamy linii zawierającej czas odpowiedzi
-                    if(match && match[1]){
-                        const responseTime = parseFloat(match[1]);
-                        resolve(JSON.stringify({ available: true, responseTime }));
-                    }else{
-                        resolve(JSON.stringify({ available: true, responseTime: null }));
-                    }
-                }
-            });
-        });
-    }
 }
 
 

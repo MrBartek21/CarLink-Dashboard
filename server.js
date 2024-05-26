@@ -82,24 +82,22 @@ wss.on('connection', function connection(ws){
 
 // Endpoint pobierający informacje i zwracający w formie JSON
 app.get('/system-info', async (req, res) => {
-    const systemInfo = {
-        localIpAddress: SystemInfo.getLocalIpAddress(),
-    };
+    const systemInfo = {};
 
     try{
-        systemInfo.Voltage = await SystemInfo.getVoltage();
+        systemInfo.System_Voltage = await SystemInfo.getVoltage();
+        systemInfo.System_CpuTemperature = await SystemInfo.getCpuTemperature();
+        systemInfo.System_SystemLoad = SystemInfo.getSystemLoad();
+        systemInfo.System_MemoryUsage = SystemInfo.getMemoryUsage();
+        systemInfo.System_DiskUsage = await SystemInfo.getDiskUsage();
+
+
+        systemInfo.Network_IpAddress = await NetworkInfo.getIpAddress();
+        systemInfo.Network_NetworkStatus = await NetworkInfo.getNetworkStatus();
+        systemInfo.Network_WifiInfo = await NetworkInfo.getWifiInfo();
+        systemInfo.Network_EthernetInfo = await NetworkInfo.getEthernetInfo();
+
         //systemInfo.bluetoothDevices = await SystemInfo.getBluetoothDevices();
-        systemInfo.CpuTemperature = await SystemInfo.getCpuTemperature();
-        systemInfo.SystemLoad = SystemInfo.getSystemLoad();
-        systemInfo.MemoryUsage = SystemInfo.getMemoryUsage();
-        systemInfo.DiskUsage = await SystemInfo.getDiskUsage();
-        systemInfo.NetworkStatus = await SystemInfo.getNetworkStatus();
-
-        // Dodanie informacji o sieci Wi-Fi
-        systemInfo.WifiInfo = await NetworkInfo.getWifiInfo();
-
-        // Dodanie informacji o połączeniu Ethernet
-        systemInfo.EthernetInfo = await NetworkInfo.getEthernetInfo();
         
         res.json(systemInfo);
     }catch (error){
@@ -108,34 +106,6 @@ app.get('/system-info', async (req, res) => {
     }
 });
 
-
-/*
-let devices = [];
-// Rozpoczynamy skanowanie, gdy BLE jest włączone
-noble.on('stateChange', (state) => {
-    if (state === 'poweredOn') {
-        noble.startScanning([], true); // true dla ciągłego skanowania
-    } else {
-        noble.stopScanning();
-    }
-});
-
-// Obsługa zdarzenia znalezienia urządzenia
-noble.on('discover', (peripheral) => {
-    const device = {
-        name: peripheral.advertisement.localName || 'Unknown Device',
-        address: peripheral.address
-    };
-    if (!devices.some(d => d.address === device.address)) {
-        devices.push(device);
-        console.log(`Znaleziono urządzenie: ${device.name} (${device.address})`);
-    }
-});
-
-// Endpoint API do pobierania urządzeń Bluetooth
-app.get('/api/devices', (req, res) => {
-  res.json(devices);
-});*/
 
 
 
@@ -161,5 +131,5 @@ app.post('/action/restart', (req, res) => {
 
 // Startowanie serwera
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+    console.log(`Server listening on port ${PORT}`);
 });
