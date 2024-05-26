@@ -9,13 +9,14 @@ const os = require('os');
 const { SystemInfo } = require('./utils/SystemInfo');
 const { NetworkInfo } = require('./utils/NetworkInfo');
 
-//const noble = require('noble');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Ustawienie folderu, z którego będą serwowane pliki HTML i inne zasoby statyczne
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+
 
 // Endpoint do pobrania listy odtwarzania
 app.get('/playlist', (req, res) => {
@@ -50,6 +51,8 @@ app.get('/Music/:filename', (req, res) => {
 });
 
 
+
+
 // WebSocket dla przesyłania danych w czasie rzeczywistym
 const wss = new WebSocket.Server({ port: 8080 });
 
@@ -78,7 +81,6 @@ wss.on('connection', function connection(ws){
     ws.send(JSON.stringify({ error: 'Error opening serial port: ' + err.message }));
   }
 });
-
 
 // Endpoint pobierający informacje i zwracający w formie JSON
 app.get('/system-info', async (req, res) => {
@@ -128,6 +130,9 @@ app.post('/action/restart', (req, res) => {
         res.send('System został pomyślnie zrestartowany.');
     });
 });
+
+
+
 
 // Startowanie serwera
 app.listen(PORT, () => {
