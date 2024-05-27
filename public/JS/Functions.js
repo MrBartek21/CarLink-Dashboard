@@ -60,14 +60,16 @@ function log(type="log", source="null", message){
 
 function fetchData(){
     const sysInfoDiv = document.querySelector('.sysinfo');
-    const tempCPUNavDiv = document.querySelector('.tempCPUNav');
+    const tempCPUNavDiv = document.querySelector('#tempCPUNav');
+    const wifiSignalStrengthDiv = document.querySelector('#wifiSignalStrength');
 
     const tempWarningIcon = document.querySelector('#tempWarningIcon');
     const undervoltageIcon = document.querySelector('#undervoltageIcon');
     const bluetoothIcon = document.querySelector('#bluetoothIcon');
     const wifiIcon = document.querySelector('#wifiIcon');
+    const ethernetIcon = document.querySelector('#ethernetIcon');
     const usbIcon = document.querySelector('#usbIcon');
-    //const gpsIcon = document.querySelector('#gpsIcon');
+    const pingIcon = document.querySelector('#pingIcon');
 
     fetch('/system-info')
         .then(response => response.json())
@@ -131,48 +133,92 @@ function fetchData(){
 
 
                 if(key === 'System_Voltage'){
-                    try{
-                        const decodejson = JSON.parse(data[key]);
-                        const voltage = decodejson.voltage;
+                    const dataJson = data[key];
 
-                        if(!decodejson.error){
-                            if(voltage.undervoltage == true) undervoltageIcon.style.display = "inline";
-                            else undervoltageIcon.style.display = "none";
-                        }
-                    }catch(error){
-                        log('error', 'fetchData', 'Błąd podczas przetwarzania zmiennej Voltage '+error);
+                    if(dataJson.error == "N/A"){
+                        if(dataJson.undervoltage == true) undervoltageIcon.style.display = "inline";
+                        else undervoltageIcon.style.display = "none";
+                    }else{
+                        undervoltageIcon.style.display = "none";
+
+                        log('error', 'fetchData', 'Błąd podczas przetwarzania zmiennej '+key+': '+dataJson.error);
                     }
                 }
 
                 if(key === 'System_CpuTemperature'){
-                    try{
-                        decodejson = JSON.parse(data[key]);
+                    const dataJson = data[key];
 
-                        if(!decodejson.error){
-                            if(decodejson.temperatures > 55) tempWarningIcon.style.display = "inline";
-                            else tempWarningIcon.style.display = "none";
-                            
-                            tempCPUNavDiv.textContent = decodejson.temperatures + "℃";
-                        }
-                    }catch(error){
-                        log('error', 'fetchData', 'Błąd podczas przetwarzania zmiennej CpuTemperature');
+                    if(dataJson.error == "N/A"){
+                        if(dataJson.temperatures > 55) tempWarningIcon.style.display = "inline";
+                        else tempWarningIcon.style.display = "none";
+
+                        tempCPUNavDiv.textContent = dataJson.temperatures + "℃";
+                    }else{
+                        tempWarningIcon.style.display = "inline";
+                        tempCPUNavDiv.textContent = "N/A℃";
+
+                        log('error', 'fetchData', 'Błąd podczas przetwarzania zmiennej '+key+': '+dataJson.error);
                     }
                 }
 
                 if(key === 'Network_NetworkStatus'){
-                    try{
-                        decodejson = JSON.parse(data[key]);
+                    const dataJson = data[key];
 
-                        if(!decodejson.error){
-                            if(decodejson.available == true){
-                                wifiIcon.style.display = "inline";
-                            }else{
-                                wifiIcon.style.display = "none";
-                            }
-                        }
-                    }catch(error){
-                        log('error', 'fetchData', 'Błąd podczas przetwarzania zmiennej NetworkStatus '+error);
+                    if(dataJson.error == "N/A"){
+                        if(dataJson.available == true) pingIcon.style.display = "inline";
+                        else pingIcon.style.display = "none";
+                    }else{
+                        pingIcon.style.display = "none";
+
+                        log('error', 'fetchData', 'Błąd podczas przetwarzania zmiennej '+key+': '+dataJson.error);
                     }
+                }
+
+                if(key === 'Network_WifiInfo'){
+                    const dataJson = data[key];
+
+                    if(dataJson.error == "N/A"){
+                        if(dataJson.essid != "N/A"){
+                            wifiIcon.style.display = "inline";
+
+                            wifiSignalStrengthDiv.textContent = dataJson.signalLevel;
+                        }else{
+                            wifiIcon.style.display = "none";
+                            wifiSignalStrengthDiv.textContent = "";
+                        }
+                    }else{
+                        wifiIcon.style.display = "none";
+                        wifiSignalStrengthDiv.textContent = "";
+
+                        log('error', 'fetchData', 'Błąd podczas przetwarzania zmiennej '+key+': '+dataJson.error);
+                    }
+                }
+
+                if(key === 'Network_EthernetInfo'){
+                    const dataJson = data[key];
+
+                    if(dataJson.error == "N/A"){
+                        if(dataJson.state == "UP") ethernetIcon.style.display = "inline";
+                        else ethernetIcon.style.display = "none";
+                    }else{
+                        ethernetIcon.style.display = "none";
+
+                        log('error', 'fetchData', 'Błąd podczas przetwarzania zmiennej '+key+': '+dataJson.error);
+                    }
+                }
+
+                if(key === 'System_DiskUsage'){
+                    const dataJson = data[key];
+
+                    dataJson.forEach(disk => {
+                        //console.log(`Filesystem: ${disk.filesystem}, Size: ${disk.size}, Used: ${disk.used}, Available: ${disk.available}, Use Percentage: ${disk.usePercentage}`);
+
+                        if(disk.filesystem.startsWith('/dev/sd')){
+                            usbIcon.style.display = "inline";
+                        }else{
+                            usbIcon.style.display = "none";
+                        }
+                    });
                 }
             }
 
