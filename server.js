@@ -94,7 +94,6 @@ app.get('/system-info', async (req, res) => {
         systemInfo.System_DiskUsage = await SystemInfo.getDiskUsage();
 
 
-        systemInfo.Network_IpAddress = await NetworkInfo.getIpAddress();
         systemInfo.Network_NetworkStatus = await NetworkInfo.getNetworkStatus();
         systemInfo.Network_WifiInfo = await NetworkInfo.getWifiInfo();
         systemInfo.Network_EthernetInfo = await NetworkInfo.getEthernetInfo();
