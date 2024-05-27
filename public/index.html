@@ -39,24 +39,31 @@
 			<div class="container-fluid">
 				<div class="row text-center text-bold">
 					<div class="col-sm-4">
-						<span class="tempCPUNav">N/A&#8451;</span>
+						<span id="tempCPUNav">N/A</span>
 						<i id="tempWarningIcon" class="bi bi-exclamation-triangle-fill" style="display: none; color: red; font-size: 1.2rem;"></i>
 						<i class="bi bi-thermometer" style="font-size: 1.2rem;"></i>
 					</div>
 					<div class="col-sm-4">
 						<i id="undervoltageIcon" class="bi bi-exclamation-triangle-fill" style="display: none; color: red; font-size: 1.2rem;"></i>
 						<span>&nbsp;</span>
-						<i id="bluetoothIcon" class="bi bi-bluetooth" style="display: none; font-size: 1.2rem;"></i>
+						<i id="scmConnectionIcon" class="bi bi-plug" style="display: none; font-size: 1.2rem;"></i>
 						<span>&nbsp;</span>
-						<i id="wifiIcon" class="bi bi-wifi" style="display: none; font-size: 1.2rem;"></i>
+						<i id="ethernetIcon" class="bi bi-ethernet" style="display: none; font-size: 1.2rem;"></i>
+						<span>&nbsp;</span>
+						<i id="wifiIcon" class="bi bi-wifi wifi-icon" style="display: none; font-size: 1.2rem;"></i>
+						<span id="wifiSignalStrength" class="signal-strength"></span>
 						<span>&nbsp;</span>
 						<i id="usbIcon" class="bi bi-usb" style="display: none; font-size: 1.2rem;"></i>
 						<span>&nbsp;</span>
+						<i id="pingIcon" class="bi bi-arrow-up-right-circle" style="display: none; font-size: 1.2rem;"></i>
+                		<span>&nbsp;</span>
 						<i id="gpsIcon" class="bi bi-geo-alt" style="display: none; font-size: 1.2rem;"></i>
 					</div>
 					<div class="col-sm-4 text-right">
-						<span id="tempNav">N/A&#8451;</span>
-						<i class="bi bi-cloud-sun" style="font-size: 1.2rem;"></i>
+						<span id="tempNav">N/A</span>
+						<i id="tempSunIcon" class="bi bi-thermometer-sun" style="display: none; font-size: 1.2rem;"></i> <!-- Ikona pogody -->
+						<i id="tempSnowIcon" class="bi bi-thermometer-snow" style="display: none; font-size: 1.2rem;"></i> <!-- Ikona pogody -->
+						<i id="tempHalfIcon" class="bi bi-thermometer-half" style="display: none; font-size: 1.2rem;"></i> <!-- Ikona pogody -->
 						<span>&nbsp;</span>
 						<span id="clockNav">N/A</span>
 					</div>
@@ -74,25 +81,24 @@
 						<div class="col-10">
 							<div class="row">
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileDash" disabled><i class="bi bi-speedometer"></i><hr /> Dashboard</button></div>
-
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileLed" disabled><i class="bi bi-lightbulb"></i><hr /> Ledy</button></div>
-
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTilePump" disabled><i class="bi bi-droplet"></i><hr /> Intercooler</button></div>
+
+								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileFiles"><i class="bi bi-folder"></i><hr /> Files</button></div>
+
 
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnYouTube" disabled><i class="bi bi-youtube"></i><hr /> YouTube</button></div>
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnSpotify"><i class="bi bi-spotify"></i><hr /> Spotify</button></div>
 
-								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileSensors"><i class="bi bi-diagram-3"></i><hr /> Sensors</button></div>
 
+								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnMenuNav2" disabled><i class="bi bi-diagram-3"></i><hr /> text</button></div>
+
+
+								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileSettings"><i class="bi bi-sliders"></i><hr /> Settings</button></div>
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileLogs"><i class="bi bi-card-list"></i><hr /> Logs</button></div>
-
-								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnMenuSettings"><i class="bi bi-sliders"></i><hr /> Settings</button></div>
-
-								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnMenuNav2" disabled><i class="bi bi-sign-turn-right"></i><hr /> text</button></div>
-
+								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileDebug"><i class="bi bi-bug"></i><hr /> Debug</button></div>
 								
 
-								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnMenuNav2" disabled><i class="bi bi-sign-turn-right"></i><hr /> text</button></div>
 							</div>
 						</div>
 						<div class="col-1"></div>
@@ -172,10 +178,11 @@
 							</div>
 						</div>
 					</div>
-					<div class="bg-light p-2 rounded mt-1" id="menuSensors" style="display: none;">
+
+					<div class="bg-light p-4 rounded mt-1" id="menuDebug" style="display: none;">
 						<div class="row">
 							<div class="col-12">
-								<h4 class="fw-bold">Sensors</h4>
+								<h4 class="fw-bold">Debug Info</h4>
 								<div class="mt-3 text-center">
 									<button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#sysinfoModal">System Info</button>
 									<button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#gpsinfoModal">GPS Info</button>
@@ -186,7 +193,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="bg-light p-2 rounded mt-1" id="menuLogs" style="display: none;">
+					<div class="bg-light p-4 rounded mt-1" id="menuLogs" style="display: none;">
 						<div class="row">
 							<div class="col-12">
 								<h4 class="fw-bold">Logs</h4>
@@ -248,6 +255,31 @@
 							</div>
 						</div>
 					</div>
+					
+
+					<div class="bg-light p-4 rounded mt-1" id="menuFiles" style="display: none;">
+						<div class="row">
+							<div class="col-12">
+								<h4 class="fw-bold">Files</h4>
+								<div class="table-responsive">
+									<table class="table table-striped table-hover text-center">
+										<thead class="thead-dark">
+											<tr>
+												<th><i class="bi bi-speedometer"></i></th>
+												<th><i class="bi bi-thermometer"></i></th>
+												<th><i class="bi bi-droplet"></i></th>
+												<th><i class="bi bi-geo-alt"></i></th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+
 					<div class="bg-dark p-2 rounded mt-1" id="menuCamera" style="display: none;">
 						<div class="row">
 							<div class="col-12 d-flex justify-content-center align-items-center">
@@ -562,6 +594,8 @@
 		<script src="/JS/Functions.js"></script>
 		<script src="/JS/Manager/USB.js"></script>
 		<script src="/JS/Manager/Keyboard.js"></script>
+
+		<script src="/JS/Camera.js"></script>
 		
 
 		<script src="/JS/Manager/Gauge.js"></script>
@@ -585,10 +619,11 @@
 					{ id: "btnTileDash", menu: "menuDash" },
 					{ id: "btnTileLed", menu: "menuLed" },
 					{ id: "btnTilePump", menu: "menuPump" },
-					{ id: "btnTileSensors", menu: "menuSensors" },
+					{ id: "btnTileDebug", menu: "menuDebug" },
+					{ id: "btnTileFiles", menu: "menuFiles" },
 					{ id: "btnTileLogs", menu: "menuLogs" },
 					{ id: "btnMenuCamera", menu: "menuCamera" },
-					{ id: "btnMenuSettings", menu: "menuSettings" },
+					{ id: "btnTileSettings", menu: "menuSettings" },
 					{ id: "btnSpotify", menu: "menuSpotify" },
 					{ id: "btnYouTube", menu: "menuYouTube" },
 					{ id: "btnMenuClimate", menu: "menuClimate" }
@@ -612,64 +647,18 @@
 		</script>
 
 
-<script>
-    // Inicjalizacja mapy Leaflet
-    var mymap = L.map('map').setView([51.505, -0.09], 13);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(mymap);
-
-    // Dodanie markera
-    L.marker([51.5, -0.09]).addTo(mymap)
-        .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-        .openPopup();
-</script>
-
-
-
 		<script>
-			(() => {
-				const width = 320; // We will scale the photo width to this
-				let height = 0; // This will be computed based on the input stream
-				let streaming = false;
-				let video = null;
+			// Inicjalizacja mapy Leaflet
+			var mymap = L.map('map').setView([51.505, -0.09], 13);
 
-				function startup() {
-					video = document.getElementById('video');
+			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+			}).addTo(mymap);
 
-					navigator.mediaDevices.getUserMedia({video: true, audio: false})
-					.then((stream) => {
-						video.srcObject = stream;
-						video.play();
-					})
-					.catch((err) => {
-						console.error(`An error occurred: ${err}`);
-					});
-
-					video.addEventListener('canplay', (ev) => {
-					if (!streaming) {
-						height = video.videoHeight / (video.videoWidth/width);
-
-						// Firefox currently has a bug where the height can't be read from
-						// the video, so we will make assumptions if this happens.
-
-						if (isNaN(height)) {
-						height = width / (4/3);
-						}
-
-						video.setAttribute('width', width);
-						video.setAttribute('height', height);
-						streaming = true;
-					}
-					}, false);
-				}
-
-				// Set up our event listener to run the startup process
-				// once loading is complete.
-				window.addEventListener('load', startup, false);
-			})();
-
+			// Dodanie markera
+			L.marker([51.5, -0.09]).addTo(mymap)
+				.bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+				.openPopup();
 		</script>
 
 		<script>
