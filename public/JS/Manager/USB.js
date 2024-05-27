@@ -1,5 +1,17 @@
 const socket = new WebSocket('ws://localhost:8080');
 
+const usbIcon = document.querySelector('#usbIcon');
+const gpsIcon = document.querySelector('#gpsIcon');
+
+const tempNavDiv = document.querySelector('#tempNav');
+const scmConnectionIcon = document.querySelector('#scmConnectionIcon');
+
+const tempSunIcon = document.querySelector('#tempSunIcon');
+const tempSnowIcon = document.querySelector('#tempSnowIcon');
+const tempHalfIcon = document.querySelector('#tempHalfIcon');
+
+
+
 socket.addEventListener('open', function (event){
     log('log', 'USBManager', 'WebSocket connection established');
 });
@@ -8,8 +20,6 @@ socket.addEventListener('open', function (event){
 let buffer = '';
 socket.addEventListener('message', function (event){
     const newData = event.data;
-    const usbIcon = document.querySelector('#usbIcon');
-    const gpsIcon = document.querySelector('#gpsIcon');
 
     if(buffer === '' && newData.includes('{')) buffer += newData.slice(newData.indexOf('{'));
     else buffer += newData;
@@ -43,6 +53,8 @@ socket.addEventListener('message', function (event){
                 dataDisplay.innerHTML = '';
                 dataDisplay.appendChild(table);
             }else if(dataType == "scm"){
+                scmConnectionIcon.style.display = "inline";
+
                 const table = createTable(dataValue);
                 const dataDisplay = document.querySelector('.scminfo');
                 dataDisplay.innerHTML = '';
@@ -52,6 +64,7 @@ socket.addEventListener('message', function (event){
             buffer = '';
         }catch (error){
             log("error", "USBManager", error);
+            scmConnectionIcon.style.display = "none";
             gpsIcon.style.display = "none";
         }
     }
@@ -115,9 +128,15 @@ function createTable(data){
 
 socket.addEventListener('close', function (event){
     log('log', 'USBManager', 'WebSocket connection closed');
+
+    scmConnectionIcon.style.display = "none";
+    gpsIcon.style.display = "none";
 });
 
 socket.addEventListener('error', function (event){
     log('error', 'USBManager', 'WebSocket error:'+event);
     console.log(event);
+
+    scmConnectionIcon.style.display = "none";
+    gpsIcon.style.display = "none";
 });
