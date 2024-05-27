@@ -8,16 +8,24 @@ class SystemInfo{
         return new Promise((resolve, reject) => {
             exec('vcgencmd get_throttled', (error, stdout, stderr) => {
                 if(error){
-                    console.error("Error retrieving voltage:", error.message);
-                    resolve(JSON.stringify({ error: error.message }));
+                    resolve({
+                        throttled: 'N/A',
+                        undervoltage: 'N/A',
+                        error: error.message
+                    });
                 }else{
-                    const throttledHex = parseInt(stdout.trim(), 16);
-                    const undervoltageDetected = (throttledHex & 0x10000) !== 0; // Sprawdzamy bit undervoltage
-                    const voltage = {
-                        value: stdout.trim(),
-                        undervoltage: undervoltageDetected
+                    let Voltage = {
+                        throttled: 'N/A',
+                        undervoltage: 'N/A',
+                        error: 'N/A'
                     };
-                    resolve(JSON.stringify({ voltage }));
+
+                    Voltage.throttled = stdout.trim();
+
+                    const throttledHex = parseInt(stdout.trim(), 16);
+                    Voltage.undervoltage = (throttledHex & 0x10000) !== 0; // Sprawdzamy bit undervoltage
+
+                    resolve(Voltage);
                 }
             });
         });
@@ -27,42 +35,79 @@ class SystemInfo{
         return new Promise((resolve, reject) => {
             exec('cat /sys/class/thermal/thermal_zone*/temp', (error, stdout, stderr) => {
                 if(error){
-                    console.error("Error retrieving CPU temperature:", error.message);
-                    resolve(JSON.stringify({ error: error.message }));
-                }else{
-                    const temps = stdout.split('\n').filter(line => line.trim() !== ''); // Dzielimy wynik na linie i usuwamy puste linie
-                    const temperatures = temps.map(temp => {
-                        const temperature = parseInt(temp) / 1000; // Konwertujemy wartość na stopnie Celsiusza
-                        return temperature;
+                    resolve({
+                        temperatures: 'N/A',
+                        error: error.message
                     });
-                    resolve(JSON.stringify({ temperatures }));
+                }else{
+                    let CpuTemperature = {
+                        temperatures: 'N/A',
+                        error: 'N/A'
+                    };
+
+                    const temps = stdout.split('\n').filter(line => line.trim() !== '');
+                    const temp = parseInt(temps) / 1000
+                    
+                    CpuTemperature.temperatures = temp;
+                    resolve(CpuTemperature);
                 }
             });
         });
     }
 
     static getSystemLoad(){
-        return os.loadavg(); // Zwraca tablicę obciążenia systemu w ciągu ostatnich 1, 5 i 15 minut
+        let SystemLoad = {
+            load1: 'N/A',
+            load5: 'N/A',
+            load15: 'N/A',
+            error: 'N/A'
+        };
+
+        try{
+            const loadAvg = os.loadavg();
+            SystemLoad.load1 = loadAvg[0];
+            SystemLoad.load15 = loadAvg[1];
+            SystemLoad.load5 = loadAvg[2];
+
+            return SystemLoad;
+        }catch(error){
+            SystemLoad.error = error.message;
+            return SystemLoad;
+        }
     }
 
-    static getMemoryUsage(){
-        const totalMemoryBytes = os.totalmem();
-        const freeMemoryBytes = os.freemem();
-        const usedMemoryBytes = totalMemoryBytes - freeMemoryBytes;
-    
-        const totalMemoryGB = (totalMemoryBytes / (1024 * 1024 * 1024)).toFixed(2); // Konwersja na gigabajty z zaokrągleniem do dwóch miejsc po przecinku
-        const freeMemoryGB = (freeMemoryBytes / (1024 * 1024 * 1024)).toFixed(2);
-        const usedMemoryGB = (usedMemoryBytes / (1024 * 1024 * 1024)).toFixed(2);
-    
-        const memoryUsagePercentage = ((usedMemoryBytes / totalMemoryBytes) * 100).toFixed(2); // Obliczenie procentowego użycia pamięci
-    
-        return{
-            totalMemory: `${totalMemoryGB} GB`,
-            freeMemory: `${freeMemoryGB} GB`,
-            usedMemory: `${usedMemoryGB} GB`,
-            memoryUsagePercentage: `${memoryUsagePercentage}%`
+    static getMemoryUsage(){6
+        let MemoryUsage = {
+            totalMemory: 'N/A',
+            freeMemory: 'N/A',
+            usedMemory: 'N/A',
+            memoryUsagePercentage: 'N/A',
+            error: 'N/A'
         };
+    
+        try{
+            const totalMemoryBytes = os.totalmem();
+            const freeMemoryBytes = os.freemem();
+            const usedMemoryBytes = totalMemoryBytes - freeMemoryBytes;
+    
+            const totalMemoryGB = (totalMemoryBytes / (1024 * 1024 * 1024)).toFixed(2); // Konwersja na gigabajty z zaokrągleniem do dwóch miejsc po przecinku
+            const freeMemoryGB = (freeMemoryBytes / (1024 * 1024 * 1024)).toFixed(2);
+            const usedMemoryGB = (usedMemoryBytes / (1024 * 1024 * 1024)).toFixed(2);
+    
+            const memoryUsagePercentage = ((usedMemoryBytes / totalMemoryBytes) * 100).toFixed(2); // Obliczenie procentowego użycia pamięci
+    
+            MemoryUsage.totalMemory = `${totalMemoryGB} GB`;
+            MemoryUsage.freeMemory = `${freeMemoryGB} GB`;
+            MemoryUsage.usedMemory = `${usedMemoryGB} GB`;
+            MemoryUsage.memoryUsagePercentage = `${memoryUsagePercentage}%`;
+    
+            return MemoryUsage;
+        }catch (error){
+            MemoryUsage.error = error.message;
+            return MemoryUsage;
+        }
     }
+    
 
     static getDiskUsage(){
         return new Promise((resolve, reject) => {
