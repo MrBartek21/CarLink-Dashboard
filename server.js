@@ -109,6 +109,42 @@ app.get('/system-info', async (req, res) => {
 
 
 
+// Rekurencyjna funkcja do pobierania struktury katalogu
+const getDirectoryStructure = (dirPath) => {
+  const items = fs.readdirSync(dirPath, { withFileTypes: true });
+
+  return items.map(item => {
+      const fullPath = path.join(dirPath, item.name);
+      if (item.isDirectory()) {
+          return {
+              name: item.name,
+              path: fullPath,
+              isDirectory: true,
+              children: getDirectoryStructure(fullPath)
+          };
+      } else {
+          return {
+              name: item.name,
+              path: fullPath,
+              isDirectory: false
+          };
+      }
+  });
+};
+
+app.get('/files/*', (req, res) => {
+  const directoryPath = `/${req.params[0]}`;
+
+  try {
+      const structure = getDirectoryStructure(directoryPath);
+      res.json(structure);
+  } catch (err) {
+      res.status(500).json({ error: err.message });
+  }
+});
+
+
+
 
 app.post('/action/shutdown', (req, res) => {
     exec('sudo shutdown now', (error, stdout, stderr) => {

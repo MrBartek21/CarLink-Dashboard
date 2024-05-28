@@ -58,6 +58,49 @@ function log(type="log", source="null", message){
     logsDiv.appendChild(newRow);
 }
 
+function loadDirectory(path) {
+    fetch(`/files${path}`)
+        .then(response => response.json())
+        .then(data => {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+
+            if (path !== '/') {
+                const parentPath = path.split('/').slice(0, -1).join('/') || '/';
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item list-group-item-secondary';
+                listItem.textContent = 'Go up..';
+                listItem.style.cursor = 'pointer';
+                listItem.addEventListener('click', () => {
+                    loadDirectory(parentPath);
+                });
+                fileList.appendChild(listItem);
+            }
+
+            data.forEach(file => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = file.name;
+
+                if (file.isDirectory) {
+                    listItem.style.fontWeight = 'bold';
+                    listItem.style.cursor = 'pointer';
+                    listItem.addEventListener('click', () => {
+                        loadDirectory(file.path);
+                    });
+                }
+
+                fileList.appendChild(listItem);
+            });
+
+            currentPath = path;
+        })
+        .catch(error => console.error('Error fetching files:', error));
+}
+
+
+//let previousUsbState = false;
+//let currentUsbMountedOn = '';
 function fetchData(){
     const sysInfoDiv = document.querySelector('.sysinfo');
     const tempCPUNavDiv = document.querySelector('#tempCPUNav');
@@ -70,6 +113,8 @@ function fetchData(){
     const ethernetIcon = document.querySelector('#ethernetIcon');
     const usbIcon = document.querySelector('#usbIcon');
     const pingIcon = document.querySelector('#pingIcon');
+
+    const usbMounted = document.querySelector('#usbMounted');
 
     fetch('/system-info')
         .then(response => response.json())
@@ -209,16 +254,30 @@ function fetchData(){
 
                 if(key === 'System_DiskUsage'){
                     const dataJson = data[key];
+                    let foundUsb = false;
 
                     dataJson.forEach(disk => {
                         //console.log(`Filesystem: ${disk.filesystem}, Size: ${disk.size}, Used: ${disk.used}, Available: ${disk.available}, Use Percentage: ${disk.usePercentage}`);
 
                         if(disk.filesystem.startsWith('/dev/sd')){
                             usbIcon.style.display = "inline";
-                        }else{
-                            usbIcon.style.display = "none";
+                            foundUsb = true;
+
+                            const usbMountedValue = usbMounted.textContent;
+                            if(usbMountedValue == "NONE"){
+                                loadDirectory(disk.mountedOn);
+                                usbMounted.textContent = disk.mountedOn;
+                            }
+
                         }
                     });
+
+                    // Jeśli nie znaleziono żadnego dysku zaczynającego się od '/dev/sd'
+                    if(!foundUsb){
+                        usbIcon.style.display = "none";
+                        usbMounted.textContent = "NONE";
+                        // Tutaj możesz wykonać inne działania, które mają zostać wykonane, gdy nie ma dysku USB
+                    }
                 }
             }
 

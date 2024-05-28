@@ -54,6 +54,7 @@
 						<span id="wifiSignalStrength" class="signal-strength"></span>
 						<span>&nbsp;</span>
 						<i id="usbIcon" class="bi bi-usb" style="display: none; font-size: 1.2rem;"></i>
+						<span id="usbMounted" style="display: none;">NONE</span>
 						<span>&nbsp;</span>
 						<i id="pingIcon" class="bi bi-arrow-up-right-circle" style="display: none; font-size: 1.2rem;"></i>
                 		<span>&nbsp;</span>
@@ -261,18 +262,7 @@
 						<div class="row">
 							<div class="col-12">
 								<h4 class="fw-bold">Files</h4>
-								<div class="table-responsive">
-									<table class="table table-striped table-hover text-center">
-										<thead class="thead-dark">
-											<tr>
-												<th><i class="bi bi-speedometer"></i></th>
-												<th><i class="bi bi-thermometer"></i></th>
-												<th><i class="bi bi-droplet"></i></th>
-												<th><i class="bi bi-geo-alt"></i></th>
-											</tr>
-										</thead>
-									</table>
-								</div>
+								<ul id="fileList" class="list-group"></ul>
 							</div>
 						</div>
 					</div>
