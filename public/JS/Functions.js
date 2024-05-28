@@ -366,3 +366,35 @@ function zegar(){
 
     setTimeout(zegar, 1000); 
 }
+
+
+
+
+function updateScreen(newScreen){
+    const screen1 = document.querySelector('#screen1');
+    const screen2 = document.querySelector('#screen2');
+    const screen3 = document.querySelector('#screen3');
+
+    if(newScreen == 0){
+        screen1.style.display = "flex";
+        screen2.style.display = "none";
+        screen3.style.display = "none";
+    }else if(newScreen == 1){
+        screen1.style.display = "none";
+        screen2.style.display = "flex";
+        screen3.style.display = "none";
+    }else if(newScreen == 2){
+        screen1.style.display = "none";
+        screen2.style.display = "none";
+        screen3.style.display = "flex";
+    }
+}
+
+
+function goToScreen(slideIndex){
+    updateScreen(slideIndex);
+
+    document.querySelectorAll('.screen-button').forEach((button, index) => {
+        button.classList.toggle('active', index === slideIndex);
+    });
+}

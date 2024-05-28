@@ -9,6 +9,9 @@
     width: 100%;
 }
 
+
+
+
 .sysinfo{
     height: 435px;
     overflow-y: scroll;
@@ -23,6 +26,8 @@
     background-color: #6c757d; /* Kolor kciuka przewijania */
     border-radius: 10px; /* Zaokrąglenie rogów kciuka przewijania */
 }
+
+
 
 
 .logs-scrollable {
@@ -47,12 +52,12 @@
 .screen-control {
     position: fixed;
     bottom: 66px;
-    left: 0;
-    width: 100%;
-    background-color: #f8f9fa;
+    left: 25%;
+    background-color: #50555a !important;
     display: flex;
     justify-content: center;
-    padding: 10px 0;
+    padding: 10px 2px;
+    border-radius: 10px;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -69,8 +74,8 @@
     transition: background-color 0.3s;
 }
 
-.screen-button i {
-    margin-right: 8px;
+.screen-button i{
+    font-size: 1.4rem;
 }
 
 .screen-button.active {
@@ -80,29 +85,6 @@
 .screen-button:hover {
     background-color: #0056b3;
 }
-
-.icon {
-    font-size: 16px;
-}
-
-.icon-screen1::before {
-    content: '\f108';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-}
-
-.icon-screen2::before {
-    content: '\f109';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-}
-
-.icon-screen3::before {
-    content: '\f10a';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-}
-
   
 
 
