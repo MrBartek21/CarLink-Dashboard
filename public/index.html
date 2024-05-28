@@ -80,27 +80,42 @@
 					<div class="row" id="menuTile">
 						<div class="col-1"></div>
 						<div class="col-10">
-							<div class="row">
+							<div id="screen1" class="row">
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileDash" disabled><i class="bi bi-speedometer"></i><hr /> Dashboard</button></div>
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileLed" disabled><i class="bi bi-lightbulb"></i><hr /> Ledy</button></div>
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTilePump" disabled><i class="bi bi-droplet"></i><hr /> Intercooler</button></div>
-
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileFiles"><i class="bi bi-folder"></i><hr /> Files</button></div>
-
-
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnYouTube" disabled><i class="bi bi-youtube"></i><hr /> YouTube</button></div>
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnSpotify"><i class="bi bi-spotify"></i><hr /> Spotify</button></div>
-
-
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnMenuNav2" disabled><i class="bi bi-diagram-3"></i><hr /> text</button></div>
-
-
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileSettings"><i class="bi bi-sliders"></i><hr /> Settings</button></div>
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileLogs"><i class="bi bi-card-list"></i><hr /> Logs</button></div>
 								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" id="btnTileDebug"><i class="bi bi-bug"></i><hr /> Debug</button></div>
-								
-
 							</div>
+							<div id="screen2" class="row" style="display: none;">
+								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" disabled><i class="bi bi-youtube"></i><hr /> YouTube</button></div>
+								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile"><i class="bi bi-spotify"></i><hr /> Spotify</button></div>
+								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile" disabled><i class="bi bi-diagram-3"></i><hr /> text</button></div>
+								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile"><i class="bi bi-sliders"></i><hr /> Settings</button></div>
+							</div>
+							<div id="screen3" class="row" style="display: none;">
+								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile"><i class="bi bi-card-list"></i><hr /> Logs</button></div>
+								<div class="col-sm-3"><button class="btn btn-danger btn-block btn-tile"><i class="bi bi-bug"></i><hr /> Debug</button></div>
+							</div>
+							
+							<div class="screen-control">
+								<button class="screen-button active" onclick="goToSlide(0)">
+									<i class="icon icon-screen1"></i> Pulpit 1
+								</button>
+								<button class="screen-button" onclick="goToSlide(1)">
+									<i class="icon icon-screen2"></i> Pulpit 2
+								</button>
+								<button class="screen-button" onclick="goToSlide(2)">
+									<i class="icon icon-screen3"></i> Pulpit 3
+								</button>
+							</div>
+							
+				
 						</div>
 						<div class="col-1"></div>
 					</div>
@@ -593,6 +608,103 @@
 
 		<script src="https://www.youtube.com/iframe_api"></script>
 		
+
+
+		<script>
+			let currentIndex = 0;
+		
+			function updateCarousel(newScreen) {
+				const screen1 = document.querySelector('#screen1');
+				const screen2 = document.querySelector('#screen2');
+				const screen3 = document.querySelector('#screen3');
+
+				if(newScreen == 0){
+					screen1.style.display = "flex";
+					screen2.style.display = "none";
+					screen3.style.display = "none";
+				}else if(newScreen == 1){
+					screen1.style.display = "none";
+					screen2.style.display = "flex";
+					screen3.style.display = "none";
+				}else if(newScreen == 2){
+					screen1.style.display = "none";
+					screen2.style.display = "none";
+					screen3.style.display = "flex";
+				}
+
+				//const indicators = document.querySelectorAll('.carousel-indicators li');
+				//carouselInner.style.transform = `translateX(-${currentIndex * 100 / 3}%)`;
+				//indicators.forEach((indicator, index) => {
+				//	indicator.classList.toggle('active', index === currentIndex);
+				//});
+			}
+
+			function updateCarousel3(newScreen) {
+				const screens = [
+					document.querySelector('#screen1'),
+					document.querySelector('#screen2'),
+					document.querySelector('#screen3')
+				];
+
+				let currentScreenIndex = screens.findIndex(screen => screen.style.display === 'flex');
+				if (currentScreenIndex === -1) currentScreenIndex = 0;
+
+				const direction = newScreen > currentScreenIndex ? 'right' : 'left';
+
+				screens.forEach((screen, index) => {
+					if (index === newScreen) {
+					screen.classList.remove(`screen-enter-${direction === 'right' ? 'left' : 'right'}`);
+					screen.classList.add(`screen-enter-${direction}`, 'screen-enter-active');
+					screen.style.display = 'flex';
+					} else if (index === currentScreenIndex) {
+					screen.classList.add(`screen-exit-${direction}`);
+					setTimeout(() => {
+						screen.style.display = 'none';
+						screen.classList.remove(`screen-exit-${direction}`, 'screen-enter-active');
+					}, 500);
+					} else {
+					screen.style.display = 'none';
+					}
+				});
+			}
+
+			function updateCarousel4(newScreen) {
+				const screens = [
+					document.querySelector('#screen1'),
+					document.querySelector('#screen2'),
+					document.querySelector('#screen3')
+				];
+
+				screens.forEach((screen, index) => {
+					if (index === newScreen) {
+						screen.classList.remove('screen-hidden', 'screen-exit');
+						screen.classList.add('screen-active');
+					} else {
+						screen.classList.remove('screen-active');
+						if (index < newScreen) {
+							screen.classList.add('screen-exit');
+						} else {
+							screen.classList.add('screen-hidden');
+						}
+					}
+				});
+			}
+
+		
+			function goToSlide(slideIndex) {
+				currentIndex = slideIndex;
+				updateCarousel(currentIndex);
+
+    // Implementacja logiki przełączania ekranów
+    console.log('Przełączam na pulpit:', slideIndex);
+    // Aktualizacja aktywnego przycisku
+    document.querySelectorAll('.screen-button').forEach((button, index) => {
+        button.classList.toggle('active', index === slideIndex);
+    });
+}
+		</script>
+
+
 
 		<script>
 			$(document).ready(function(){
