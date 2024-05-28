@@ -41,6 +41,76 @@
 
 
 
+
+
+
+.screen-control {
+    position: fixed;
+    bottom: 66px;
+    left: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.screen-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.screen-button i {
+    margin-right: 8px;
+}
+
+.screen-button.active {
+    background-color: #0056b3;
+}
+
+.screen-button:hover {
+    background-color: #0056b3;
+}
+
+.icon {
+    font-size: 16px;
+}
+
+.icon-screen1::before {
+    content: '\f108';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+}
+
+.icon-screen2::before {
+    content: '\f109';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+}
+
+.icon-screen3::before {
+    content: '\f10a';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+}
+
+  
+
+
+
+
+
+
+
 .text-bold {
     font-weight: bold;
 }
