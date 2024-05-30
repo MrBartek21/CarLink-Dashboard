@@ -1,3 +1,4 @@
+//const socket = new WebSocket('ws://10.0.0.204:8080');
 const socket = new WebSocket('ws://localhost:8080');
 
 const usbIcon = document.querySelector('#usbIcon');
@@ -47,6 +48,18 @@ socket.addEventListener('message', function (event){
                 const dataDisplay = document.querySelector('.carinfo');
                 dataDisplay.innerHTML = '';
                 dataDisplay.appendChild(table);
+
+                //const GaugeMeter_1 = document.querySelector('#GaugeMeter_1');
+                //GaugeMeter_1.dataset.used = dataValue.speed;
+
+                $('#GaugeMeter_1').gaugeMeter({ used: dataValue.speed });
+                $('#GaugeMeter_2').gaugeMeter({ used: dataValue.speed });
+                $('#GaugeMeter_3').gaugeMeter({ used: dataValue.engine_temperature });
+                $('#GaugeMeter_4').gaugeMeter({ used: dataValue.speed });
+                $('#GaugeMeter_5').gaugeMeter({ used: dataValue.fuel_level });
+                $('#GaugeMeter_6').gaugeMeter({ used: dataValue.battery_voltage });
+
+                console.log(dataValue);
             }else if(dataType == "power"){
                 const table = createTable(dataValue);
                 const dataDisplay = document.querySelector('.powerinfo');

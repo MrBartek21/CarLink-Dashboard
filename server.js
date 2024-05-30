@@ -1,11 +1,13 @@
-const express = require('express');
-var bodyParser = require('body-parser')
-const path = require('path');
-const fs = require('fs');
+const express = require('express'); //webServer
+var bodyParser = require('body-parser') //body parser (odbieranie body poprzez endpointy)
+const path = require('path'); // obsługa ścierzek do plików
+const fs = require('fs'); //praca na plikach
 
 const SerialPort = require('serialport').SerialPort;
 const WebSocket = require('ws');
 const os = require('os');
+
+const { exec } = require('child_process'); //obsługa poleceń linux
 
 const { SystemInfo } = require('./utils/SystemInfo');
 const { NetworkInfo } = require('./utils/NetworkInfo');
@@ -63,6 +65,20 @@ app.put('/setSettings', jsonParser, (req, res) => {
   });
 });
 
+
+// Endpoint do pobrania listy playlist
+app.get('/playlists', (req, res) => {
+    fs.readdir(musicDir, (err, files) => {
+        if(err){
+            console.error('Error reading music directory:', err);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+        const playlists = files.filter(file => fs.statSync(path.join(musicDir, file)).isDirectory());
+        res.json(playlists);
+    });
+});
+
 // Endpoint do pobrania listy utworów w playlistach
 app.get('/playlist/:name', (req, res) => {
     const playlistName = req.params.name;
@@ -97,27 +113,39 @@ app.get('/Music/:playlist/:filename', (req, res) => {
     res.sendFile(filePath);
 });
 
-// Endpoint do pobrania listy playlist
-app.get('/playlists', (req, res) => {
-    fs.readdir(musicDir, (err, files) => {
-        if(err){
-            console.error('Error reading music directory:', err);
-            res.status(500).send('Internal Server Error');
-            return;
-        }
-        const playlists = files.filter(file => fs.statSync(path.join(musicDir, file)).isDirectory());
-        res.json(playlists);
-    });
+
+
+
+
+
+
+
+
+
+// Endpoint pobierający informacje i zwracający w formie JSON
+app.get('/system-info', async (req, res) => {
+    const systemInfo = {};
+
+    try{
+        systemInfo.System_Voltage = await SystemInfo.getVoltage();
+        systemInfo.System_CpuTemperature = await SystemInfo.getCpuTemperature();
+        systemInfo.System_SystemLoad = SystemInfo.getSystemLoad();
+        systemInfo.System_MemoryUsage = SystemInfo.getMemoryUsage();
+        systemInfo.System_DiskUsage = await SystemInfo.getDiskUsage();
+
+
+        systemInfo.Network_NetworkStatus = await NetworkInfo.getNetworkStatus();
+        systemInfo.Network_WifiInfo = await NetworkInfo.getWifiInfo();
+        systemInfo.Network_EthernetInfo = await NetworkInfo.getEthernetInfo();
+
+        //systemInfo.bluetoothDevices = await SystemInfo.getBluetoothDevices();
+        
+        res.json(systemInfo);
+    }catch (error){
+        console.error("Error retrieving system information:", error);
+        res.status(500).json({ error: error.message });
+    }
 });
-
-
-
-
-
-
-
-
-
 
 // WebSocket dla przesyłania danych w czasie rzeczywistym
 const wss = new WebSocket.Server({ port: 8080 });
@@ -148,30 +176,7 @@ wss.on('connection', function connection(ws){
   }
 });
 
-// Endpoint pobierający informacje i zwracający w formie JSON
-app.get('/system-info', async (req, res) => {
-    const systemInfo = {};
 
-    try{
-        systemInfo.System_Voltage = await SystemInfo.getVoltage();
-        systemInfo.System_CpuTemperature = await SystemInfo.getCpuTemperature();
-        systemInfo.System_SystemLoad = SystemInfo.getSystemLoad();
-        systemInfo.System_MemoryUsage = SystemInfo.getMemoryUsage();
-        systemInfo.System_DiskUsage = await SystemInfo.getDiskUsage();
-
-
-        systemInfo.Network_NetworkStatus = await NetworkInfo.getNetworkStatus();
-        systemInfo.Network_WifiInfo = await NetworkInfo.getWifiInfo();
-        systemInfo.Network_EthernetInfo = await NetworkInfo.getEthernetInfo();
-
-        //systemInfo.bluetoothDevices = await SystemInfo.getBluetoothDevices();
-        
-        res.json(systemInfo);
-    }catch (error){
-        console.error("Error retrieving system information:", error);
-        res.status(500).json({ error: error.message });
-    }
-});
 
 
 
@@ -213,6 +218,7 @@ app.get('/files/*', (req, res) => {
 
 
 app.post('/action/shutdown', (req, res) => {
+    console.log(res);
     exec('sudo shutdown now', (error, stdout, stderr) => {
         if(error){
             res.status(500).send(`Błąd: ${error.message}`);
@@ -223,6 +229,7 @@ app.post('/action/shutdown', (req, res) => {
 });
 
 app.post('/action/restart', (req, res) => {
+    console.log(res);
     exec('sudo reboot', (error, stdout, stderr) => {
         if(error){
             res.status(500).send(`Błąd: ${error.message}`);

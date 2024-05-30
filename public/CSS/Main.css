@@ -38,18 +38,34 @@
 }
 
 
+#fileList{
+    height: 435px;
+    overflow-y: scroll;
+}
+
+/* Dostosowanie paska przewijania */
+#fileList::-webkit-scrollbar {
+    width: 8px; /* Szerokość paska przewijania */
+}
+
+#fileList::-webkit-scrollbar-thumb {
+    background-color: #6c757d; /* Kolor kciuka przewijania */
+    border-radius: 10px; /* Zaokrąglenie rogów kciuka przewijania */
+}
 
 
-.logs-scrollable {
-    height: 435px !important;
+
+
+#logs-scrollable {
+    max-height: 435px !important;
     overflow-y: scroll !important;
 }
 
-.logs-scrollable::-webkit-scrollbar {
+#logs-scrollable::-webkit-scrollbar {
     width: 8px !important;
 }
 
-.logs-scrollable::-webkit-scrollbar-thumb {
+#logs-scrollable::-webkit-scrollbar-thumb {
     background-color: #6c757d !important;
     border-radius: 10px !important;
 }

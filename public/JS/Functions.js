@@ -155,6 +155,8 @@ function fetchData(){
     const pingIcon = document.querySelector('#pingIcon');
 
     const usbMounted = document.querySelector('#debugUsbMounted');
+    const usbDiskUsage = document.querySelector('#usbDiskUsage');
+    const fileList = document.querySelector('#fileList');
 
     fetch('/system-info')
         .then(response => response.json())
@@ -303,6 +305,17 @@ function fetchData(){
                             usbIcon.style.display = "inline";
                             foundUsb = true;
 
+                            const diskUsageText = `
+                                <div class="row align-items-center">
+                                    <div class="col"><span class="badge bg-success">Used: ${disk.used} GB</span></div>
+                                    <div class="col"><span class="badge bg-primary">Free: ${disk.available} GB</span></div>
+                                    <div class="col"><span class="badge bg-secondary">Total: ${disk.size} GB</span></div>
+                                    <div class="col"><span class="badge bg-info">Usage: ${disk.usePercentage}</span></div>
+                                </div>
+                                `;
+
+                            usbDiskUsage.innerHTML = diskUsageText;
+
                             const usbMountedValue = usbMounted.textContent;
                             if(usbMountedValue == "NONE"){
                                 loadDirectory(disk.mountedOn);
@@ -316,7 +329,9 @@ function fetchData(){
                     if(!foundUsb){
                         usbIcon.style.display = "none";
                         usbMounted.textContent = "NONE";
-                        // Tutaj możesz wykonać inne działania, które mają zostać wykonane, gdy nie ma dysku USB
+
+                        usbDiskUsage.innerHTML = '';
+                        fileList.innerHTML = '<li class="list-group-item">No USB device connected</li>';
                     }
                 }
             }
