@@ -1,4 +1,5 @@
 const express = require('express');
+var bodyParser = require('body-parser')
 const path = require('path');
 const fs = require('fs');
 
@@ -15,6 +16,11 @@ const { NetworkInfo } = require('./utils/NetworkInfo');
 //===================================================================================================
 //============================================[Variables]============================================
 //===================================================================================================
+
+// create application/json parser
+var jsonParser = bodyParser.json()
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -37,6 +43,24 @@ app.get('/getSettings', (req, res) => {
     }catch(err){
         console.error('Error reading settings file:', err);
     }
+});
+
+// Endpoint to update the settings
+app.put('/setSettings', jsonParser, (req, res) => {
+  const updatedSettings = req.body;
+
+  fs.readFile(settingsFile, 'utf8', (err, data) => {
+      if(err) return res.status(500).json({ error: 'Error reading settings file' });
+      
+      const settings = JSON.parse(data);
+      const newSettings = { ...settings, ...updatedSettings };
+
+      fs.writeFile(settingsFile, JSON.stringify(newSettings, null, 2), 'utf8', (err) => {
+          if(err) return res.status(500).json({ error: 'Error writing to settings file' });
+          
+          res.json(newSettings);
+      });
+  });
 });
 
 // Endpoint do pobrania listy utworów w playlistach

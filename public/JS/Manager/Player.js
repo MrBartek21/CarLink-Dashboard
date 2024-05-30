@@ -79,8 +79,10 @@ window.addEventListener("DOMContentLoaded", () => {
 					
 						const starButton = document.createElement('button');
 						starButton.setAttribute('type', 'button');
-						starButton.classList.add('btn', 'btn-warning', 'btn-outline-danger', 'btn-sm');
+						starButton.classList.add('btn', 'btn-warning', 'btn-outline-danger', 'btn-sm', 'playlist-icon');
 						starButton.innerHTML = element === dataSettings.defaultPlaylist ? '<i class="bi bi-star-fill"></i>' : '<i class="bi bi-star"></i>';
+						starButton.addEventListener('click', () => { setSettings('defaultPlaylist', element); });
+						starButton.dataset.playlist = element;
 					
 						cardHeader.appendChild(heading);
 						cardHeader.appendChild(starButton);
@@ -94,7 +96,16 @@ window.addEventListener("DOMContentLoaded", () => {
 						const playButton = document.createElement('button');
 						playButton.setAttribute('type', 'button');
 						playButton.classList.add('btn', 'btn-primary', 'btn-sm', 'playlist-button');
-						playButton.innerHTML = '<i class="bi bi-play-fill"></i> Play';
+						
+						if(element == dataSettings.defaultPlaylist){
+							playButton.innerHTML = '<i class="bi bi-play-fill"></i> Playing';
+							playButton.disabled = true;
+						}else{
+							playButton.innerHTML = '<i class="bi bi-play-fill"></i> Play';
+							playButton.disabled = false;
+						}
+
+						
 						playButton.addEventListener('click', () => { loadPlaylist(element); });
 						playButton.dataset.playlist = element;
 					
@@ -134,17 +145,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
 					// (D) INIT SET FIRST SONG
 					audPlay(0, false);
-
-					document.querySelectorAll('.playlist-button').forEach(button => {
-						if(button.dataset.playlist === dataSettings.defaultPlaylist){
-							button.innerHTML = '<i class="bi bi-play-fill"></i> Playing';
-							button.disabled = true;
-						}else{
-							button.innerHTML = '<i class="bi bi-play-fill"></i> Play';
-							button.disabled = false;
-						}
-					});
-
 				})
 				.catch(error => {
 					log("error", "Player.js", 'Error fetching Playlist: '+error);

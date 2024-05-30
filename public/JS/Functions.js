@@ -58,6 +58,46 @@ function log(type="log", source="null", message){
     logsDiv.appendChild(newRow);
 }
 
+function setSettings(settings, value){
+    fetch('/getSettings')
+        .then(response => response.json())
+        .then(data => {
+            let decodeData = JSON.stringify(data);
+            document.getElementById('debugSettings').innerText = decodeData;
+            
+            let obj = JSON.parse(decodeData);
+
+            obj[settings] = value;
+
+            console.log(obj);
+
+            // Wysyłanie zaktualizowanych ustawień na endpoint
+            fetch('/setSettings', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            })
+            .then(response => response.json())
+            .then(updatedSettings => {
+                log('log', 'setSettings', 'Updated settings: '+updatedSettings);
+                if(settings == "defaultPlaylist"){
+                    document.querySelectorAll('.playlist-icon').forEach(icon => {
+                        if(icon.dataset.playlist === value) icon.innerHTML = '<i class="bi bi-star-fill"></i>';
+                        else icon.innerHTML = '<i class="bi bi-star"></i>';
+                    });
+                }
+            })
+            .catch(error => {
+                log('error', 'setSettings', 'Error updating settings: '+error);
+            });
+        })
+        .catch(error => {
+            log('error', 'setSettings', 'Error in getSettings: '+error);
+        });
+}
+
 function loadDirectory(path) {
     fetch(`/files${path}`)
         .then(response => response.json())
@@ -114,7 +154,7 @@ function fetchData(){
     const usbIcon = document.querySelector('#usbIcon');
     const pingIcon = document.querySelector('#pingIcon');
 
-    const usbMounted = document.querySelector('#usbMounted');
+    const usbMounted = document.querySelector('#debugUsbMounted');
 
     fetch('/system-info')
         .then(response => response.json())
