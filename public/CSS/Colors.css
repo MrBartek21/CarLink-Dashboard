@@ -13,3 +13,21 @@
 .bg-red{
 	background-color: #FF0000 !important;
 }
+
+
+body{
+    background-color: #5A6570 !important;
+}
+
+.btn-tile{
+    background-color: #FF8C01 !important;
+}
+
+.btn-footer{
+    background-color: #FF5800 !important;
+}
+
+.btn-footer.dark{
+    background-color: #BA4100 !important;
+}
+
