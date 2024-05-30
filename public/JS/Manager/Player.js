@@ -1,5 +1,5 @@
 window.addEventListener("DOMContentLoaded", () => {
-    let playlist = []; // Zmienna playlist będzie zainicjowana pustą tablicą
+    let playlist = [];
 
     // (A2) AUDIO PLAYER & GET HTML CONTROLS
 	const audio = new Audio(),
@@ -14,28 +14,146 @@ window.addEventListener("DOMContentLoaded", () => {
 	aBack = document.getElementById("btnMenuSongBack");
 	aNext = document.getElementById("btnMenuSongNext");
 
-    // (B) FETCH PLAYLIST DATA FROM ENDPOINT
-    fetch('/playlist')
-        .then(response => response.json())
-        .then(data => {
-            playlist = data; // Przypisanie danych zwróconych przez endpoint do zmiennej playlist
+	const playlists = document.querySelector('.playlists');
+	
 
-            // (C) BUILD PLAYLIST
-            for(let i in playlist){
-                let row = document.createElement("div");
-                row.className = "col-sm-12";
-                row.innerHTML = playlist[i]["author"]+" - "+playlist[i]["name"];
-                row.addEventListener("click", () => { audPlay(i); });
-                playlist[i]["row"] = row;
-                aList.appendChild(row);
-            }
+	// (B) FUNCTION TO LOAD PLAYLIST
+	const loadPlaylist = (playlistName) => {
+		fetch('/playlist/' + playlistName)
+		.then(response => response.json())
+		.then(data => {
+			playlist = data;
+			// CLEAR CURRENT PLAYLIST
+			aList.innerHTML = "";
+			// (C) BUILD PLAYLIST
+			for (let i in playlist) {
+				let row = document.createElement("div");
+				row.className = "col-sm-12";
+				row.innerHTML = playlist[i]["author"] + " - " + playlist[i]["name"];
+				row.addEventListener("click", () => { audPlay(i); });
+				playlist[i]["row"] = row;
+				aList.appendChild(row);
+			}
+			// (D) INIT SET FIRST SONG
+			audPlay(0, false);
 
-            // (D) INIT SET FIRST SONG
-            audPlay(0, false);
-        })
-        .catch(error => {
-            console.error('Error fetching playlist:', error);
-        });
+			// Update play buttons
+            document.querySelectorAll('.playlist-button').forEach(button => {
+                if(button.dataset.playlist === playlistName){
+                    button.innerHTML = '<i class="bi bi-play-fill"></i> Playing';
+                    button.disabled = true;
+                }else{
+                    button.innerHTML = '<i class="bi bi-play-fill"></i> Play';
+                    button.disabled = false;
+                }
+            });
+		})
+		.catch(error => {
+			console.error('Error fetching playlist:', error);
+		});
+	};
+
+	
+
+	// Pobranie listy playlist
+	fetch('/getSettings')
+		.then(response => response.json())
+		.then(dataSettings => {
+			// Pobranie listy playlists
+			fetch('/playlists')
+				.then(response => response.json())
+				.then(dataPlaylistSelect => {
+					dataPlaylistSelect.forEach(element => {
+						const colDiv = document.createElement('div');
+						colDiv.classList.add('col-lg-4', 'col-md-4', 'col-sm-6', 'mb-4');
+					
+						const innerDiv = document.createElement('div');
+						innerDiv.classList.add('card', 'shadow-sm', 'border-0', 'bg-info');
+					
+						const cardHeader = document.createElement('div');
+						cardHeader.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'p-3');
+					
+						const heading = document.createElement('h5');
+						heading.classList.add('card-title', 'fw-bold', 'text-dark', 'mb-0');
+						heading.textContent = element;
+					
+						const starButton = document.createElement('button');
+						starButton.setAttribute('type', 'button');
+						starButton.classList.add('btn', 'btn-warning', 'btn-outline-danger', 'btn-sm');
+						starButton.innerHTML = element === dataSettings.defaultPlaylist ? '<i class="bi bi-star-fill"></i>' : '<i class="bi bi-star"></i>';
+					
+						cardHeader.appendChild(heading);
+						cardHeader.appendChild(starButton);
+					
+						const cardBody = document.createElement('div');
+						cardBody.classList.add('card-body', 'd-flex', 'flex-column', 'align-strech');
+					
+						const buttonDiv = document.createElement('div');
+						buttonDiv.classList.add('btn-group', 'mt-3');
+					
+						const playButton = document.createElement('button');
+						playButton.setAttribute('type', 'button');
+						playButton.classList.add('btn', 'btn-primary', 'btn-sm', 'playlist-button');
+						playButton.innerHTML = '<i class="bi bi-play-fill"></i> Play';
+						playButton.addEventListener('click', () => { loadPlaylist(element); });
+						playButton.dataset.playlist = element;
+					
+						buttonDiv.appendChild(playButton);
+					
+						cardBody.appendChild(playButton);
+					
+						innerDiv.appendChild(cardHeader);
+						innerDiv.appendChild(cardBody);
+						colDiv.appendChild(innerDiv);
+					
+						playlists.appendChild(colDiv);
+					});
+					
+
+
+			})
+			.catch(error => {
+				log("error", "Player.js", 'Error fetching Playlists: '+error);
+			});
+
+
+			fetch('/playlist/'+dataSettings.defaultPlaylist)
+				.then(response => response.json())
+				.then(dataPlaylistFile => {
+					playlist = dataPlaylistFile;
+
+					// (C) BUILD PLAYLIST
+					for(let i in playlist){
+						let row = document.createElement("div");
+						row.className = "col-sm-12";
+						row.innerHTML = playlist[i]["author"]+" - "+playlist[i]["name"];
+						row.addEventListener("click", () => { audPlay(i); });
+						playlist[i]["row"] = row;
+						aList.appendChild(row);
+					}
+
+					// (D) INIT SET FIRST SONG
+					audPlay(0, false);
+
+					document.querySelectorAll('.playlist-button').forEach(button => {
+						if(button.dataset.playlist === dataSettings.defaultPlaylist){
+							button.innerHTML = '<i class="bi bi-play-fill"></i> Playing';
+							button.disabled = true;
+						}else{
+							button.innerHTML = '<i class="bi bi-play-fill"></i> Play';
+							button.disabled = false;
+						}
+					});
+
+				})
+				.catch(error => {
+					log("error", "Player.js", 'Error fetching Playlist: '+error);
+				});
+		})
+		.catch(error => {
+			log("error", "Player.js", 'Error fetching Settings: '+error);
+		});
+
 
     // (E) PLAY MECHANISM
 	// (E1) PLAY SELECTED SONG
@@ -55,7 +173,6 @@ window.addEventListener("DOMContentLoaded", () => {
 		}
 	};
 
-    // (E2) AUTOPLAY NEXT SONG IN THE PLAYLIST
     // (E2) AUTOPLAY NEXT SONG IN THE PLAYLIST
 	audio.addEventListener("ended", () => {
 		let currentSongIndex = -1;
