@@ -368,6 +368,22 @@ function zegar(){
 }
 
 
+function updateVolumeLabel(sliderId, labelId){
+    const slider = document.getElementById(sliderId);
+    const label = document.getElementById(labelId);
+    label.textContent = slider.value;
+}
+  
+function muteAll(){
+    document.getElementById('musicVolume').value = 0;
+    document.getElementById('navVolume').value = 0;
+    document.getElementById('notifVolume').value = 0;
+    updateVolumeLabel('musicVolume', 'musicVolumeValue');
+    updateVolumeLabel('navVolume', 'navVolumeValue');
+    updateVolumeLabel('notifVolume', 'notifVolumeValue');
+}
+
+
 
 
 function updateScreen(newScreen){
