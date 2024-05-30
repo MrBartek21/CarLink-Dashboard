@@ -54,7 +54,6 @@
 						<span id="wifiSignalStrength" class="signal-strength"></span>
 						<span>&nbsp;</span>
 						<i id="usbIcon" class="bi bi-usb" style="display: none; font-size: 1.2rem;"></i>
-						<span id="usbMounted" style="display: none;">NONE</span>
 						<span>&nbsp;</span>
 						<i id="pingIcon" class="bi bi-arrow-up-right-circle" style="display: none; font-size: 1.2rem;"></i>
                 		<span>&nbsp;</span>
@@ -207,6 +206,11 @@
 									<button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#powerinfoModal">Power Info</button>
 									<button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#scminfoModal">SCM Info</button>
 								</div>
+								<details>
+									<summary>Debug value</summary>
+									<span id="debugUsbMounted">NONE</span>
+									<span id="debugSettings">NONE</span>
+								</details>
 							</div>
 						</div>
 					</div>
