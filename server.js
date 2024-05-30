@@ -9,46 +9,88 @@ const os = require('os');
 const { SystemInfo } = require('./utils/SystemInfo');
 const { NetworkInfo } = require('./utils/NetworkInfo');
 
+
+
+
+//===================================================================================================
+//============================================[Variables]============================================
+//===================================================================================================
+
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// Ustawienie folderu, z którego będą serwowane pliki HTML i inne zasoby statyczne
-app.use(express.static(path.join(__dirname, 'public')));
-
-
+// Ścieżka do folderu z muzyką
+const musicDir = path.join(__dirname, 'Music');
+const settingsFile = 'settings.json';
 
 
-// Endpoint do pobrania listy odtwarzania
-app.get('/playlist', (req, res) => {
-    const musicDir = path.join(__dirname, 'Music');
+
+
+//===================================================================================================
+//============================================[Endpoints]============================================
+//===================================================================================================
+
+// Endpoint do pobrania ustawień
+app.get('/getSettings', (req, res) => {
+    try{
+        const settings = JSON.parse(fs.readFileSync(path.join(__dirname, settingsFile)));
+        res.json(settings);
+    }catch(err){
+        console.error('Error reading settings file:', err);
+    }
+});
+
+// Endpoint do pobrania listy utworów w playlistach
+app.get('/playlist/:name', (req, res) => {
+    const playlistName = req.params.name;
+    const playlistPath = path.join(musicDir, playlistName);
+    fs.readdir(playlistPath, (err, files) => {
+        if(err){
+            console.error('Error reading playlist directory:', err);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+
+        const playlist = files.filter(file => file.endsWith('.mp3')).map(file => {
+            const [author, title] = file.replace('.mp3', '').split(' - ');
+
+            return{
+                name: title,
+                author: author,
+                src: `Music/${playlistName}/${file}`
+            };
+        });
+        res.json(playlist);
+    });
+});
+
+// Endpoint do obsługi plików muzycznych
+app.get('/Music/:playlist/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const playlist = req.params.playlist;
+    const filePath = path.join(__dirname, 'Music', playlist, filename);
+    
+    // Serwowanie pliku muzycznego
+    res.sendFile(filePath);
+});
+
+// Endpoint do pobrania listy playlist
+app.get('/playlists', (req, res) => {
     fs.readdir(musicDir, (err, files) => {
         if(err){
             console.error('Error reading music directory:', err);
             res.status(500).send('Internal Server Error');
             return;
         }
-      const playlist = files
-        .filter(file => file.endsWith('.mp3'))
-        .map(file => {
-          const [author, title] = file.replace('.mp3', '').split(' - ');
-          return {
-            name: title,
-            author: author,
-            src: `Music/${file}`
-          };
-        });
-      res.json(playlist);
+        const playlists = files.filter(file => fs.statSync(path.join(musicDir, file)).isDirectory());
+        res.json(playlists);
     });
 });
 
-// Endpoint do obsługi plików muzycznych
-app.get('/Music/:filename', (req, res) => {
-    const filename = req.params.filename;
-    const filePath = path.join(__dirname, 'Music', filename);
-    
-    // Serwowanie pliku muzycznego
-    res.sendFile(filePath);
-});
+
+
+
+
+
 
 
 
@@ -168,6 +210,10 @@ app.post('/action/restart', (req, res) => {
 
 
 
+
+
+// Ustawienie folderu, z którego będą serwowane pliki HTML i inne zasoby statyczne
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Startowanie serwera
 app.listen(PORT, () => {
