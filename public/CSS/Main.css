@@ -10,6 +10,18 @@
 }
 
 
+.round{
+    border-radius: 1rem !important;
+}
+
+.align-strech{
+    align-items: stretch !important;
+}
+
+
+
+
+
 .sysinfo{
     height: 435px;
     overflow-y: scroll;
