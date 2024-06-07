@@ -98,7 +98,7 @@ function setSettings(settings, value){
         });
 }
 
-function loadDirectory(path) {
+function loadDirectory(path){
     fetch(`/files${path}`)
         .then(response => response.json())
         .then(data => {
@@ -364,7 +364,13 @@ function menuAction(action){
             executeAction('shutdown');
             break;
         case 'restart':
-            executeAction('restart');
+                executeAction('restart');
+                break;
+        case 'start_recording':
+            executeAction('start-recording');
+            break;
+        case 'stop_recording':
+            executeAction('stop-recording');
             break;
         default:
             log('error', 'menuAction', 'Nieprawidłowa akcja.');

@@ -9,6 +9,8 @@ const os = require('os');
 
 const { exec } = require('child_process'); //obsługa poleceń linux
 
+const NodeWebcam = require("node-webcam");
+
 const { SystemInfo } = require('./utils/SystemInfo');
 const { NetworkInfo } = require('./utils/NetworkInfo');
 
@@ -27,9 +29,40 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 const app = express();
 const PORT = process.env.PORT || 3000;
 // Ścieżka do folderu z muzyką
-const musicDir = path.join(__dirname, 'Music');
+const musicDir = path.join(__dirname, 'Files_Music');
 const settingsFile = 'settings.json';
 
+
+
+
+// Opcje konfiguracji kamery
+const outputPath = 'Files_DashCam';
+const maxRecordingTime = 10 * 60 * 1000; // Maksymalny czas nagrania w milisekundach (10 minut)
+
+let recordingStartTime;
+let recordingProcess;
+
+// Ensure output directory exists
+if(!fs.existsSync(outputPath)){
+    fs.mkdirSync(outputPath);
+}
+
+
+// Funkcja rozpoczynająca nowe nagranie
+function startRecording() {
+    const fileName = `recording_${Date.now()}.mp4`;
+    const filePath = path.join(outputPath, fileName);
+    recordingStartTime = Date.now();
+    console.log(`Rozpoczęto nagrywanie: ${filePath}`);
+    recordingProcess = spawn('ffmpeg', ['-f', 'v4l2', '-video_size', '640x480', '-i', '/dev/video0', '-t', '600', filePath]); // Domyślnie nagrywa przez 10 minut (600 sekund)
+    
+    recordingProcess.on('exit', (code, signal) => {
+        console.log(`Nagrywanie zakończone (${filePath})`);
+        if (Date.now() - recordingStartTime < maxRecordingTime) {
+            startRecording(); // Jeśli nagranie nie trwało jeszcze 10 minut, rozpocznij nowe nagranie
+        }
+    });
+}
 
 
 
@@ -107,7 +140,7 @@ app.get('/playlist/:name', (req, res) => {
 app.get('/Music/:playlist/:filename', (req, res) => {
     const filename = req.params.filename;
     const playlist = req.params.playlist;
-    const filePath = path.join(__dirname, 'Music', playlist, filename);
+    const filePath = path.join(__dirname, 'Files_Music', playlist, filename);
     
     // Serwowanie pliku muzycznego
     res.sendFile(filePath);
@@ -217,6 +250,32 @@ app.get('/files/*', (req, res) => {
 
 
 
+
+// Endpoint do uruchamiania nagrywania
+app.post('/action/start-recording', (req, res) => {
+    if(!isRecording){
+        isRecording = true;
+        startRecording();
+        res.send("Recording started.");
+    }else{
+        res.send("Already recording.");
+    }
+});
+
+// Endpoint do zatrzymywania nagrywania
+app.post('/action/stop-recording', (req, res) => {
+    if (isRecording) {
+        isRecording = false;
+        if(recordingProcess){
+            recordingProcess.kill('SIGINT'); // Zakończ proces ffmpeg
+        }
+        res.send("Recording stopped.");
+    }else{
+        res.send("Not currently recording.");
+    }
+});
+
+
 app.post('/action/shutdown', (req, res) => {
     console.log(res);
     exec('sudo shutdown now', (error, stdout, stderr) => {
@@ -249,4 +308,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Startowanie serwera
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
+    if(!isRecording){
+        isRecording = true;
+        startRecording();
+        res.send("Recording started.");
+    }
 });
