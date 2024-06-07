@@ -115,6 +115,29 @@
 
 
 
+#menuSpotify{
+    min-height: 435px !important;
+    max-height: 435px !important;
+}
+
+.episodes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.episode {
+    border-radius: 25px;
+    font-size: 1.2rem;
+    padding: 15px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.episode:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
 
 
 
