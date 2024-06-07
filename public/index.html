@@ -83,7 +83,7 @@
 								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileDash"><div class="text-center"><i class="bi bi-speedometer fs-1"></i><p class="mb-0">Dash</p></div></button></div>
 								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileLed"><div class="text-center"><i class="bi bi-lightbulb fs-1"></i><p class="mb-0">Ledy</p></div></button></div>
 								<div class="col-sm-3"><button class="btn btn-tile" id="btnTilePump"><div class="text-center"><i class="bi bi-droplet fs-1"></i><p class="mb-0">Cooling</p></div></button></div>
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileDashcam" disabled><div class="text-center"><i class="bi bi-webcam fs-1"></i><p class="mb-0">DashCam</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileDashcam"><div class="text-center"><i class="bi bi-webcam fs-1"></i><p class="mb-0">DashCam</p></div></button></div>
 								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileMusicPlaylist"><div class="text-center"><i class="bi bi-music-note-list fs-1"></i><p class="mb-0">Music Playlist</p></div></button></div>
 								<div class="col-sm-3"><button class="btn btn-tile" id="btnYouTube" disabled><div class="text-center"><i class="bi bi-youtube fs-1"></i><p class="mb-0">YouTube</p></div></button></div>
 								<div class="col-sm-3"><button class="btn btn-tile" id="btnSpotify"><div class="text-center"><i class="bi bi-spotify fs-1"></i><p class="mb-0">Spotify</p></div></button></div>
@@ -211,21 +211,13 @@
 						<div class="row">
 							<div class="col-4">
 								<div class="episodes">
-									<button class="btn btn-primary episode" data-spotify-id="spotify:playlist:0kMuGANBsVJBBeNKHC2L1k">
-										Miś
-									</button>
-									<button class="btn btn-primary episode" data-spotify-id="spotify:playlist:7MFWnDGmXPWW3HuPULWJbO">
-										Misia
-									</button>
-									<button class="btn btn-primary episode" data-spotify-id="spotify:playlist:37i9dQZEVXbdZBACQTbrxc">
-										Radar premier
-									</button>
+									<button class="btn btn-primary episode" data-spotify-id="spotify:playlist:0kMuGANBsVJBBeNKHC2L1k">Miś</button>
+									<button class="btn btn-primary episode" data-spotify-id="spotify:playlist:7MFWnDGmXPWW3HuPULWJbO">Misia</button>
+									<button class="btn btn-primary episode" data-spotify-id="spotify:playlist:37i9dQZEVXbdZBACQTbrxc">Radar premier</button>
 								</div>
 							</div>
 
-							<div class="col-8">
-								<div id="embed-iframe"></div>
-							</div>
+							<div class="col-8"><div id="embed-iframe"></div></div>
 
 
 							<script src="https://open.spotify.com/embed/iframe-api/v1" async>
@@ -251,6 +243,49 @@
 							</script>
 						</div>
 					</div>
+
+					<div class="bg-light p-4 rounded mt-1" id="menuDashcam" style="display: none;">
+						<div class="row">
+							<div class="col-12">
+								<h4 class="fw-bold mb-4">DashCam</h4>
+							</div>
+						</div>
+						<div class="row">
+							<!-- Przykładowe nagranie 1 -->
+							<div class="col-md-2 mb-3">
+								<div class="card h-10">
+									<img src="thumbnail1.png" class="card-img-top" alt="Thumbnail 1">
+									<div class="card-body d-flex flex-column">
+										<p class="card-text mb-4">nazwa_pliku1.mp4</p>
+										<a href="#" class="btn btn-primary mt-auto">Odtwórz</a>
+									</div>
+								</div>
+							</div>
+							<!-- Przykładowe nagranie 2 -->
+							<div class="col-md-2 mb-3">
+								<div class="card h-10">
+									<img src="thumbnail1.png" class="card-img-top" alt="Thumbnail 2">
+									<div class="card-body d-flex flex-column">
+										<p class="card-text mb-4">nazwa_pliku2.mp4</p>
+										<a href="#" class="btn btn-primary mt-auto">Odtwórz</a>
+									</div>
+								</div>
+							</div>
+							<!-- Przykładowe nagranie 3 -->
+							<div class="col-md-2 mb-3">
+								<div class="card h-10">
+									<img src="thumbnail1.png" class="card-img-top" alt="Thumbnail 3">
+									<div class="card-body d-flex flex-column">
+										<p class="card-text mb-4">nazwa_pliku3.mp4</p>
+										<a href="#" class="btn btn-primary mt-auto">Odtwórz</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
 
 
 
@@ -340,57 +375,65 @@
 					</div>
 					<div class="bg-light p-4 rounded mt-1" id="menuSettings" style="display: none;">
 						<div class="row">
-						  <div class="col-12">
-							<h4 class="fw-bold mb-4">Settings</h4>
-							<div class="d-flex flex-wrap justify-content-between align-items-start">
-							  <div class="category-buttons mb-4">
-								<h5 class="fw-bold">Display</h5>
-								<div class="d-grid gap-2">
-								  <button class="btn btn-primary" onclick="menuAction('fullscreen')"><i class="bi bi-arrows-fullscreen"></i> Fullscreen</button>
-								  <button class="btn btn-secondary" onclick="menuAction('exit_fullscreen')"><i class="bi bi-fullscreen-exit"></i> Exit Fullscreen</button>
+							<div class="col-12">
+								<h4 class="fw-bold mb-4">Settings</h4>
+								<div class="d-flex flex-wrap justify-content-between align-items-start">
+									<div class="category-buttons mb-4">
+										<h5 class="fw-bold">Display</h5>
+										<div class="d-grid gap-2">
+											<button class="btn btn-primary" onclick="menuAction('fullscreen')"><i class="bi bi-arrows-fullscreen"></i> Fullscreen</button>
+											<button class="btn btn-secondary" onclick="menuAction('exit_fullscreen')"><i class="bi bi-fullscreen-exit"></i> Exit Fullscreen</button>
+										</div>
+									</div>
+									<div class="category-buttons mb-4">
+										<h5 class="fw-bold">Navigation</h5>
+										<div class="d-grid gap-2">
+											<button class="btn btn-info" onclick="menuAction('refresh')"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+											<button class="btn btn-warning" onclick="menuAction('close_browser')"><i class="bi bi-x-circle"></i> Close Browser</button>
+										</div>
+									</div>
+									<div class="category-buttons mb-4">
+										<h5 class="fw-bold">System</h5>
+										<div class="d-grid gap-2">
+											<button class="btn btn-success" onclick="menuAction('restart')"><i class="bi bi-arrow-clockwise"></i> Restart</button>
+											<button class="btn btn-danger" onclick="menuAction('shutdown')"><i class="bi bi-power"></i> Shutdown</button>
+										</div>
+									</div>
+									<div class="category-buttons mb-4">
+										<h5 class="fw-bold">Camera</h5>
+										<div class="d-grid gap-2">
+											<button class="btn btn-danger" onclick="menuAction('start_recording')"><i class="bi bi-record-circle"></i> Start Recording</button>
+											<button class="btn btn-secondary" onclick="menuAction('stop_recording')"><i class="bi bi-stop-circle"></i> Stop Recording</button>
+										</div>
+									</div>
+									<div class="category-buttons">
+										<h5 class="fw-bold">Volume</h5>
+										<div class="d-grid gap-2">
+											<div class="d-flex align-items-center mb-2">
+												<label class="fw-bold me-2">Music</label>
+												<input type="range" class="form-range" min="0" max="100" id="musicVolume" oninput="updateVolumeLabel('musicVolume', 'musicVolumeValue')">
+												<span id="musicVolumeValue" class="ms-2">50</span>
+											</div>
+											<div class="d-flex align-items-center mb-2">
+												<label class="fw-bold me-2">Navigation</label>
+												<input type="range" class="form-range" min="0" max="100" id="navVolume" oninput="updateVolumeLabel('navVolume', 'navVolumeValue')">
+												<span id="navVolumeValue" class="ms-2">50</span>
+											</div>
+											<div class="d-flex align-items-center mb-2">
+												<label class="fw-bold me-2">Notifications</label>
+												<input type="range" class="form-range" min="0" max="100" id="notifVolume" oninput="updateVolumeLabel('notifVolume', 'notifVolumeValue')">
+												<span id="notifVolumeValue" class="ms-2">50</span>
+											</div>
+											<button class="btn btn-secondary" onclick="muteAll()">
+												<i class="bi bi-volume-mute"></i> Mute
+											</button>
+										</div>
+									</div>
 								</div>
-							  </div>
-							  <div class="category-buttons mb-4">
-								<h5 class="fw-bold">Navigation</h5>
-								<div class="d-grid gap-2">
-								  <button class="btn btn-info" onclick="menuAction('refresh')"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
-								  <button class="btn btn-warning" onclick="menuAction('close_browser')"><i class="bi bi-x-circle"></i> Close Browser</button>
-								</div>
-							  </div>
-							  <div class="category-buttons mb-4">
-								<h5 class="fw-bold">System</h5>
-								<div class="d-grid gap-2">
-								  <button class="btn btn-success" onclick="menuAction('restart')"><i class="bi bi-arrow-clockwise"></i> Restart</button>
-								  <button class="btn btn-danger" onclick="menuAction('shutdown')"><i class="bi bi-power"></i> Shutdown</button>
-								</div>
-							  </div>
-							  <div class="category-buttons">
-								<h5 class="fw-bold">Volume</h5>
-								<div class="d-grid gap-2">
-								  <div class="d-flex align-items-center mb-2">
-									<label class="fw-bold me-2">Music</label>
-									<input type="range" class="form-range" min="0" max="100" id="musicVolume" oninput="updateVolumeLabel('musicVolume', 'musicVolumeValue')">
-									<span id="musicVolumeValue" class="ms-2">50</span>
-								  </div>
-								  <div class="d-flex align-items-center mb-2">
-									<label class="fw-bold me-2">Navigation</label>
-									<input type="range" class="form-range" min="0" max="100" id="navVolume" oninput="updateVolumeLabel('navVolume', 'navVolumeValue')">
-									<span id="navVolumeValue" class="ms-2">50</span>
-								  </div>
-								  <div class="d-flex align-items-center mb-2">
-									<label class="fw-bold me-2">Notifications</label>
-									<input type="range" class="form-range" min="0" max="100" id="notifVolume" oninput="updateVolumeLabel('notifVolume', 'notifVolumeValue')">
-									<span id="notifVolumeValue" class="ms-2">50</span>
-								  </div>
-								  <button class="btn btn-secondary" onclick="muteAll()">
-									<i class="bi bi-volume-mute"></i> Mute
-								  </button>
-								</div>
-							  </div>
 							</div>
-						  </div>
 						</div>
 					</div>
+					
 
 
 
@@ -721,6 +764,7 @@
 				buttonsAndMenus.forEach(buttonAndMenu => {
 					const displayStyle = buttonAndMenu.menu === menuId ? (menuId === "menuTile" ? 'flex' : 'block') : 'none';
 					document.getElementById(buttonAndMenu.menu).style.display = displayStyle;
+					console.log(buttonAndMenu.menu);
 				});
 			}
 
