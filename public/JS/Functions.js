@@ -139,8 +139,6 @@ function loadDirectory(path){
 }
 
 
-//let previousUsbState = false;
-//let currentUsbMountedOn = '';
 function fetchData(){
     const sysInfoDiv = document.querySelector('.sysinfo');
     const tempCPUNavDiv = document.querySelector('#tempCPUNav');
