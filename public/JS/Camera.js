@@ -1,3 +1,39 @@
+async function DashCam_Files(){
+    try{
+        const response = await fetch('/dashcam_listFiles'); // Fetch list of files from server
+        const files = await response.json(); // Parse JSON response
+
+        const container = document.querySelector('.dashcam_files'); // Select container element
+        container.innerHTML = '';
+
+        files.forEach(file => {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'col-md-2 mb-3';
+
+            console.log(file);
+
+            cardDiv.innerHTML = `
+                <div class="card h-10">
+                    <video class="video-thumbnail" preload="metadata">
+                        <source src="/dashcam_getFiles/${file}" type="video/mp4">
+                    </video>
+                    <div class="card-body d-flex flex-column">
+                        <p class="card-text text-dark mb-4">${file}</p>
+                        <a href="/dashcam_getFiles/${file}" class="btn btn-primary mt-auto">Odtwórz</a>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(cardDiv); // Append card to container
+        });
+    }catch (err){
+        log('error', 'DashCam_Files', err);
+    }
+}
+
+
+
+
 (() => {
     const width = 320; // We will scale the photo width to this
     let height = 0; // This will be computed based on the input stream

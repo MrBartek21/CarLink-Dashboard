@@ -7,9 +7,7 @@ const SerialPort = require('serialport').SerialPort;
 const WebSocket = require('ws');
 const os = require('os');
 
-const { exec } = require('child_process'); //obsługa poleceń linux
-
-const NodeWebcam = require("node-webcam");
+const { exec, spawn } = require('child_process'); //obsługa poleceń linux
 
 const { SystemInfo } = require('./utils/SystemInfo');
 const { NetworkInfo } = require('./utils/NetworkInfo');
@@ -36,33 +34,42 @@ const settingsFile = 'settings.json';
 
 
 // Opcje konfiguracji kamery
-const outputPath = 'Files_DashCam';
+const dashcam_files = 'Files_DashCam';
 const maxRecordingTime = 10 * 60 * 1000; // Maksymalny czas nagrania w milisekundach (10 minut)
 
 let recordingStartTime;
 let recordingProcess;
 
 // Ensure output directory exists
-if(!fs.existsSync(outputPath)){
-    fs.mkdirSync(outputPath);
+if(!fs.existsSync(dashcam_files)){
+    fs.mkdirSync(dashcam_files);
 }
 
 
-// Funkcja rozpoczynająca nowe nagranie
 function startRecording() {
     const fileName = `recording_${Date.now()}.mp4`;
-    const filePath = path.join(outputPath, fileName);
+    const filePath = path.join(dashcam_files, fileName);
     recordingStartTime = Date.now();
     console.log(`Rozpoczęto nagrywanie: ${filePath}`);
-    recordingProcess = spawn('ffmpeg', ['-f', 'v4l2', '-video_size', '640x480', '-i', '/dev/video0', '-t', '600', filePath]); // Domyślnie nagrywa przez 10 minut (600 sekund)
-    
-    recordingProcess.on('exit', (code, signal) => {
-        console.log(`Nagrywanie zakończone (${filePath})`);
-        if (Date.now() - recordingStartTime < maxRecordingTime) {
-            startRecording(); // Jeśli nagranie nie trwało jeszcze 10 minut, rozpocznij nowe nagranie
-        }
-    });
+
+    try {
+        recordingProcess = spawn('ffmpeg', ['-f', 'v4l2', '-video_size', '640x480', '-i', '/dev/video0', '-t', '600', filePath]); // Domyślnie nagrywa przez 10 minut (600 sekund)
+        
+        recordingProcess.on('exit', (code, signal) => {
+            console.log(`Nagrywanie zakończone (${filePath})`);
+            if (Date.now() - recordingStartTime < maxRecordingTime) {
+                startRecording(); // Jeśli nagranie nie trwało jeszcze 10 minut, rozpocznij nowe nagranie
+            }
+        });
+
+        recordingProcess.on('error', (err) => {
+            console.error('Błąd podczas nagrywania:', err);
+        });
+    } catch (err) {
+        console.error('Błąd w funkcji startRecording:', err);
+    }
 }
+
 
 
 
@@ -99,6 +106,9 @@ app.put('/setSettings', jsonParser, (req, res) => {
 });
 
 
+
+
+//Music Player
 // Endpoint do pobrania listy playlist
 app.get('/playlists', (req, res) => {
     fs.readdir(musicDir, (err, files) => {
@@ -138,19 +148,11 @@ app.get('/playlist/:name', (req, res) => {
 
 // Endpoint do obsługi plików muzycznych
 app.get('/Music/:playlist/:filename', (req, res) => {
-    const filename = req.params.filename;
-    const playlist = req.params.playlist;
-    const filePath = path.join(__dirname, 'Files_Music', playlist, filename);
+    const filePath = path.join(__dirname, 'Files_Music', req.params.playlist, req.params.filename);
     
     // Serwowanie pliku muzycznego
     res.sendFile(filePath);
 });
-
-
-
-
-
-
 
 
 
@@ -212,7 +214,7 @@ wss.on('connection', function connection(ws){
 
 
 
-
+//Files
 // Rekurencyjna funkcja do pobierania struktury katalogu
 const getDirectoryStructure = (dirPath) => {
   const items = fs.readdirSync(dirPath, { withFileTypes: true });
@@ -245,6 +247,24 @@ app.get('/files/*', (req, res) => {
   } catch (err) {
       res.status(500).json({ error: err.message });
   }
+});
+
+// Endpoint do pobierania listy plików w folderze
+app.get('/dashcam_listFiles', (req, res) => {
+    try{
+        const files = fs.readdirSync(dashcam_files);
+        res.json(files);
+    }catch (err){
+        console.error('Error reading directory:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Endpoint do obsługi plików filmowych
+app.get('/dashcam_getFiles/:filename', (req, res) => {
+    const filePath = path.join(__dirname, dashcam_files, req.params.filename);
+    
+    res.sendFile(filePath);
 });
 
 
@@ -308,9 +328,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Startowanie serwera
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
+    let isRecording;
     if(!isRecording){
         isRecording = true;
         startRecording();
-        res.send("Recording started.");
     }
 });

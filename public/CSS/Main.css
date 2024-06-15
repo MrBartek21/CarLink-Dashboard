@@ -97,6 +97,21 @@
 
 
 
+.dashcam_files {
+    max-height: 435px !important;
+    overflow-y: scroll !important;
+}
+
+.dashcam_files::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+.dashcam_files::-webkit-scrollbar-thumb {
+    background-color: #6c757d !important;
+    border-radius: 10px !important;
+}
+
+
 
 
 
