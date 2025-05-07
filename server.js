@@ -12,6 +12,11 @@ const { exec, spawn } = require('child_process'); //obsługa poleceń linux
 const { SystemInfo } = require('./utils/SystemInfo');
 const { NetworkInfo } = require('./utils/NetworkInfo');
 
+// TO DO
+//zrobic odbieranie danych do wysłania do usb
+// zrobic endpoint wysyłający stany ikoonek na navbar
+// zrobić hex to rgb dla led
+
 
 
 
@@ -33,83 +38,14 @@ const settingsFile = 'settings.json';
 
 
 
-// Opcje konfiguracji kamery
-const dashcam_files = 'Files_DashCam';
-const maxRecordingTime = 10 * 60 * 1000; // Maksymalny czas nagrania w milisekundach (10 minut)
-
-let recordingStartTime;
-let recordingProcess;
-
-// Ensure output directory exists
-if(!fs.existsSync(dashcam_files)){
-    fs.mkdirSync(dashcam_files);
-}
-
-
-function startRecording() {
-    const fileName = `recording_${Date.now()}.mp4`;
-    const filePath = path.join(dashcam_files, fileName);
-    recordingStartTime = Date.now();
-    console.log(`Rozpoczęto nagrywanie: ${filePath}`);
-
-    try {
-        recordingProcess = spawn('ffmpeg', ['-f', 'v4l2', '-video_size', '640x480', '-i', '/dev/video0', '-t', '600', filePath]); // Domyślnie nagrywa przez 10 minut (600 sekund)
-        
-        recordingProcess.on('exit', (code, signal) => {
-            console.log(`Nagrywanie zakończone (${filePath})`);
-            if (Date.now() - recordingStartTime < maxRecordingTime) {
-                startRecording(); // Jeśli nagranie nie trwało jeszcze 10 minut, rozpocznij nowe nagranie
-            }
-        });
-
-        recordingProcess.on('error', (err) => {
-            console.error('Błąd podczas nagrywania:', err);
-        });
-    } catch (err) {
-        console.error('Błąd w funkcji startRecording:', err);
-    }
-}
-
-
 
 
 //===================================================================================================
 //============================================[Endpoints]============================================
 //===================================================================================================
 
-// Endpoint do pobrania ustawień
-app.get('/getSettings', (req, res) => {
-    try{
-        const settings = JSON.parse(fs.readFileSync(path.join(__dirname, settingsFile)));
-        res.json(settings);
-    }catch(err){
-        console.error('Error reading settings file:', err);
-    }
-});
-
-// Endpoint to update the settings
-app.put('/setSettings', jsonParser, (req, res) => {
-  const updatedSettings = req.body;
-
-  fs.readFile(settingsFile, 'utf8', (err, data) => {
-      if(err) return res.status(500).json({ error: 'Error reading settings file' });
-      
-      const settings = JSON.parse(data);
-      const newSettings = { ...settings, ...updatedSettings };
-
-      fs.writeFile(settingsFile, JSON.stringify(newSettings, null, 2), 'utf8', (err) => {
-          if(err) return res.status(500).json({ error: 'Error writing to settings file' });
-          
-          res.json(newSettings);
-      });
-  });
-});
-
-
-
-
-//Music Player
-// Endpoint do pobrania listy playlist
+//Multimedia - Playlisty i Piosenki
+// Zwraca listę playlist
 app.get('/playlists', (req, res) => {
     fs.readdir(musicDir, (err, files) => {
         if(err){
@@ -122,9 +58,9 @@ app.get('/playlists', (req, res) => {
     });
 });
 
-// Endpoint do pobrania listy utworów w playlistach
-app.get('/playlist/:name', (req, res) => {
-    const playlistName = req.params.name;
+// Zwraca szczegóły i listę piosenek z jednej playlisty
+app.get('/playlists/:playlistId', (req, res) => {
+    const playlistName = req.params.playlistId;
     const playlistPath = path.join(musicDir, playlistName);
     fs.readdir(playlistPath, (err, files) => {
         if(err){
@@ -139,16 +75,16 @@ app.get('/playlist/:name', (req, res) => {
             return{
                 name: title,
                 author: author,
-                src: `Music/${playlistName}/${file}`
+                src: `playlists/${playlistName}/songs/${file}`
             };
         });
         res.json(playlist);
     });
 });
 
-// Endpoint do obsługi plików muzycznych
-app.get('/Music/:playlist/:filename', (req, res) => {
-    const filePath = path.join(__dirname, 'Files_Music', req.params.playlist, req.params.filename);
+// Zwraca dane konkretnej piosenki w playliście
+app.get('/playlists/:playlistId/songs/:songId', (req, res) => {
+    const filePath = path.join(__dirname, 'Files_Music', req.params.playlistId, req.params.songId);
     
     // Serwowanie pliku muzycznego
     res.sendFile(filePath);
@@ -156,31 +92,165 @@ app.get('/Music/:playlist/:filename', (req, res) => {
 
 
 
+//System - Informacje, Statusy i Ustawienia
+// Zwraca status systemu (ikony stanu, np. WiFi, GPS, LTE, bateria)
+const DEBUG_MODE = true;
+const readSettingsFile = JSON.parse(fs.readFileSync(settingsFile, 'utf8'));
 
-// Endpoint pobierający informacje i zwracający w formie JSON
-app.get('/system-info', async (req, res) => {
-    const systemInfo = {};
+app.get('/system/status', async (req, res) => {
+    const status = {};
 
-    try{
-        systemInfo.System_Voltage = await SystemInfo.getVoltage();
-        systemInfo.System_CpuTemperature = await SystemInfo.getCpuTemperature();
-        systemInfo.System_SystemLoad = SystemInfo.getSystemLoad();
-        systemInfo.System_MemoryUsage = SystemInfo.getMemoryUsage();
-        systemInfo.System_DiskUsage = await SystemInfo.getDiskUsage();
+    try {
+        if (DEBUG_MODE) {
+            // Losowe dane debug
+            status.system = {
+                voltage: (Math.random() * (5 - 3.3) + 3.3).toFixed(2), // np. 3.3V - 5V
+                cpuTemperature: (Math.random() * (85 - 40) + 40).toFixed(1), // 40°C - 85°C
+                systemLoad: {
+                    oneMinute: Math.random().toFixed(2),
+                    fiveMinutes: Math.random().toFixed(2),
+                    fifteenMinutes: Math.random().toFixed(2),
+                },
+                memoryUsage: {
+                    total: 4096,
+                    used: Math.floor(Math.random() * 4096),
+                },
+                diskUsage: {
+                    total: 128000,
+                    used: Math.floor(Math.random() * 128000),
+                },
+                settings: {
+                    warnTemperature: readSettingsFile.warnTemp,
+                    unitsTemperature: readSettingsFile.units.temperature,
+                },
+            };
 
+            status.network = {
+                networkStatus: 'connected',
+                wifi: {
+                    ssid: 'DebugNet',
+                    signalStrength: Math.floor(Math.random() * 100),
+                    ip: '192.168.0.' + Math.floor(Math.random() * 255),
+                },
+                ethernet: {
+                    status: 'connected',
+                    ip: '10.0.0.' + Math.floor(Math.random() * 255),
+                },
+            };
 
-        systemInfo.Network_NetworkStatus = await NetworkInfo.getNetworkStatus();
-        systemInfo.Network_WifiInfo = await NetworkInfo.getWifiInfo();
-        systemInfo.Network_EthernetInfo = await NetworkInfo.getEthernetInfo();
+        } else {
+            // Rzeczywiste dane
+            status.system = {
+                voltage: await SystemInfo.getVoltage(),
+                cpuTemperature: await SystemInfo.getCpuTemperature(),
+                systemLoad: SystemInfo.getSystemLoad(),
+                memoryUsage: SystemInfo.getMemoryUsage(),
+                diskUsage: await SystemInfo.getDiskUsage(),
+                settings: {
+                    warnTemperature: readSettingsFile.warnTemperature,
+                    unitsTemperature: readSettingsFile.units.temperature,
+                },
+            };
 
-        //systemInfo.bluetoothDevices = await SystemInfo.getBluetoothDevices();
-        
-        res.json(systemInfo);
-    }catch (error){
-        console.error("Error retrieving system information:", error);
+            status.network = {
+                networkStatus: await NetworkInfo.getNetworkStatus(),
+                wifi: await NetworkInfo.getWifiInfo(),
+                ethernet: await NetworkInfo.getEthernetInfo(),
+            };
+
+            // status.bluetooth = await SystemInfo.getBluetoothDevices();
+        }
+
+        res.json(status);
+    } catch (error) {
+        console.error("Error retrieving system status:", error);
         res.status(500).json({ error: error.message });
     }
 });
+
+
+// Pobiera aktualne ustawienia systemowe
+app.get('/system/settings', (req, res) => {
+    try {
+        const settings = JSON.parse(fs.readFileSync(path.join(__dirname, settingsFile), 'utf8'));
+        res.json(settings);
+    } catch (err) {
+        console.error('Error reading settings file:', err);
+        res.status(500).json({ error: 'Failed to read settings' });
+    }
+});
+
+// Aktualizuje ustawienia systemowe
+app.put('/system/settings', jsonParser, (req, res) => {
+    const updatedSettings = req.body;
+
+    fs.readFile(path.join(__dirname, settingsFile), 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading settings file:', err);
+            return res.status(500).json({ error: 'Failed to read settings' });
+        }
+
+        let settings;
+        try {
+            settings = JSON.parse(data);
+        } catch (parseErr) {
+            console.error('Error parsing settings file:', parseErr);
+            return res.status(500).json({ error: 'Invalid settings format' });
+        }
+
+        const newSettings = { ...settings, ...updatedSettings };
+
+        fs.writeFile(path.join(__dirname, settingsFile), JSON.stringify(newSettings, null, 2), 'utf8', (err) => {
+            if (err) {
+                console.error('Error writing settings file:', err);
+                return res.status(500).json({ error: 'Failed to write settings' });
+            }
+
+            res.json(newSettings);
+        });
+    });
+});
+
+// Wykonuje akcję systemową (np. reboot, shutdown, sleep)
+app.post('/action/:type', (req, res) => {
+    const action = req.params.type;
+    console.log(`Wykonywana akcja: ${action}`);
+
+    let command;
+    switch (action) {
+        case 'shutdown':
+            command = 'sudo shutdown now';
+            break;
+        case 'restart':
+        case 'reboot':
+            command = 'sudo reboot';
+            break;
+        case 'sleep':
+            command = 'sudo systemctl suspend';
+            break;
+        default:
+            res.status(400).send(`Nieznana akcja: ${action}`);
+            return;
+    }
+
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            res.status(500).send(`Błąd: ${error.message}`);
+            return;
+        }
+        res.send(`System wykonał akcję: ${action}`);
+    });
+});
+
+
+
+// USB i Urządzenia Multimedialne
+
+
+
+
+
+
 
 // WebSocket dla przesyłania danych w czasie rzeczywistym
 const wss = new WebSocket.Server({ port: 8080 });
@@ -213,7 +283,7 @@ wss.on('connection', function connection(ws){
 
 
 
-
+/*
 //Files
 // Rekurencyjna funkcja do pobierania struktury katalogu
 const getDirectoryStructure = (dirPath) => {
@@ -248,78 +318,7 @@ app.get('/files/*', (req, res) => {
       res.status(500).json({ error: err.message });
   }
 });
-
-// Endpoint do pobierania listy plików w folderze
-app.get('/dashcam_listFiles', (req, res) => {
-    try{
-        const files = fs.readdirSync(dashcam_files);
-        res.json(files);
-    }catch (err){
-        console.error('Error reading directory:', err);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
-// Endpoint do obsługi plików filmowych
-app.get('/dashcam_getFiles/:filename', (req, res) => {
-    const filePath = path.join(__dirname, dashcam_files, req.params.filename);
-    
-    res.sendFile(filePath);
-});
-
-
-
-
-
-// Endpoint do uruchamiania nagrywania
-app.post('/action/start-recording', (req, res) => {
-    if(!isRecording){
-        isRecording = true;
-        startRecording();
-        res.send("Recording started.");
-    }else{
-        res.send("Already recording.");
-    }
-});
-
-// Endpoint do zatrzymywania nagrywania
-app.post('/action/stop-recording', (req, res) => {
-    if (isRecording) {
-        isRecording = false;
-        if(recordingProcess){
-            recordingProcess.kill('SIGINT'); // Zakończ proces ffmpeg
-        }
-        res.send("Recording stopped.");
-    }else{
-        res.send("Not currently recording.");
-    }
-});
-
-
-app.post('/action/shutdown', (req, res) => {
-    console.log(res);
-    exec('sudo shutdown now', (error, stdout, stderr) => {
-        if(error){
-            res.status(500).send(`Błąd: ${error.message}`);
-            return;
-        }
-        res.send('System został pomyślnie wyłączony.');
-    });
-});
-
-app.post('/action/restart', (req, res) => {
-    console.log(res);
-    exec('sudo reboot', (error, stdout, stderr) => {
-        if(error){
-            res.status(500).send(`Błąd: ${error.message}`);
-            return;
-        }
-        res.send('System został pomyślnie zrestartowany.');
-    });
-});
-
-
-
+*/
 
 
 // Ustawienie folderu, z którego będą serwowane pliki HTML i inne zasoby statyczne
@@ -328,9 +327,4 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Startowanie serwera
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
-    let isRecording;
-    if(!isRecording){
-        isRecording = true;
-        startRecording();
-    }
 });

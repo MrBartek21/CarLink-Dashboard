@@ -1,3 +1,24 @@
 {
-  "defaultPlaylist": "Techno"
+  "defaultPlaylist": "Techno",
+  "wifi": {
+    "autoConnect": true,
+    "preferredNetworks": [
+      "MyCarWiFi",
+      "HomeWiFi"
+    ]
+  },
+  "bluetooth": {
+    "enabled": true,
+    "autoPair": true
+  },
+  "language": "pl",
+  "warnTemp": 70,
+  "units": {
+    "temperature": "C",
+    "distance": "km"
+  },
+  "startup": {
+    "resumeLastPlaylist": true,
+    "resumeLastVolume": true
+  }
 }

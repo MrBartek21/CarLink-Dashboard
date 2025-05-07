@@ -41,7 +41,7 @@
 
 
 .vertical-scrollable {
-    height: 290px;
+    height: 55vh;
     overflow-y: scroll;
 }
 

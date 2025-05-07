@@ -6,46 +6,39 @@
     	<meta name="description" content="">
     	<meta name="author" content="MrBartek21">
     	<meta name="generator" content="VisualStudio Code">
-    	<title>Main Page · CGCar v8</title>
+    	<title>Main Page · CarLink v9</title>
 
     	<!-- Bootstrap core CSS -->
-		<link rel="stylesheet" href="Bootstrap/CSS/bootstrap.min.css" type="text/css">
-		<link rel="stylesheet" href="Icons/bootstrap-icons.css" type="text/css">
-		<script src="JS/jquery-min.js"></script>
+		<link rel="stylesheet" href="library/bootstrap/CSS/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="library/bootstrapIcons/bootstrap-icons.css" type="text/css">
+		<script src="library/jquery-min.js"></script>
 
 
-		<link href="CSS/Main.css" rel="stylesheet">
-		<link href="CSS/Colors.css" rel="stylesheet">
+		<link href="css/main.css" rel="stylesheet">
+		<link href="css/Colors.css" rel="stylesheet">
 
 
-		<link href="CSS/Keyboard.css" rel="stylesheet">
-		<link href="CSS/Player.css" rel="stylesheet">
-		<link href="CSS/Navigation.css" rel="stylesheet">
-
-
+		<link href="css/Keyboard.css" rel="stylesheet">
+		<link href="css/Player.css" rel="stylesheet">
 
 
 
-		<link rel="stylesheet" href="CSS/GaugeMeter.css" type="text/css">
-
-    	<script defer src="JS/Manager/Player.js"></script>
 
 
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+		<link rel="stylesheet" href="css/GaugeMeter.css" type="text/css">
 	</head>
 	<body>
+		
+
 		<nav class="py-2 navbar-dark bg-dark2 text-light">
 			<div class="container-fluid">
-				<div class="row text-center text-bold">
+				<div class="row text-center text-bold"  style="font-size: 1.5rem;">
 					<div class="col-sm-4">
 						<span id="tempCPUNav">N/A</span>
 						<i id="tempWarningIcon" class="bi bi-exclamation-triangle-fill" style="display: none; color: red; font-size: 1.2rem;"></i>
 						<i class="bi bi-thermometer" style="font-size: 1.2rem;"></i>
 					</div>
 					<div class="col-sm-4">
-						<i id="undervoltageIcon" class="bi bi-exclamation-triangle-fill" style="display: none; color: red; font-size: 1.2rem;"></i>
-						<span>&nbsp;</span>
 						<i id="scmConnectionIcon" class="bi bi-plug" style="display: none; font-size: 1.2rem;"></i>
 						<span>&nbsp;</span>
 						<i id="ethernetIcon" class="bi bi-ethernet" style="display: none; font-size: 1.2rem;"></i>
@@ -61,9 +54,6 @@
 					</div>
 					<div class="col-sm-4 text-right">
 						<span id="tempNav">N/A</span>
-						<i id="tempSunIcon" class="bi bi-thermometer-sun" style="display: none; font-size: 1.2rem;"></i> <!-- Ikona pogody -->
-						<i id="tempSnowIcon" class="bi bi-thermometer-snow" style="display: none; font-size: 1.2rem;"></i> <!-- Ikona pogody -->
-						<i id="tempHalfIcon" class="bi bi-thermometer-half" style="display: none; font-size: 1.2rem;"></i> <!-- Ikona pogody -->
 						<span>&nbsp;</span>
 						<span id="clockNav">N/A</span>
 					</div>
@@ -71,45 +61,48 @@
 			</div>
 		</nav>
 		
+
 		<main class="container" style="max-width: 100% !important;">
 			<div class="row">
+
+				<!-- Left menu /-->
 				<div class="col-8 p-0">
 
-					<!-- left menu buttons /-->
+					<!-- Left menu buttons /-->
 					<div class="row" id="menuTile">
 						<div class="col-1"></div>
 						<div class="col-10">
 							<div id="screen1" class="row">
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileDash"><div class="text-center"><i class="bi bi-speedometer fs-1"></i><p class="mb-0">Dash</p></div></button></div>
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileLed"><div class="text-center"><i class="bi bi-lightbulb fs-1"></i><p class="mb-0">Ledy</p></div></button></div>
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnTilePump"><div class="text-center"><i class="bi bi-droplet fs-1"></i><p class="mb-0">Cooling</p></div></button></div>
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileDashcam"><div class="text-center"><i class="bi bi-webcam fs-1"></i><p class="mb-0">DashCam</p></div></button></div>
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileMusicPlaylist"><div class="text-center"><i class="bi bi-music-note-list fs-1"></i><p class="mb-0">Music Playlist</p></div></button></div>
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnYouTube" disabled><div class="text-center"><i class="bi bi-youtube fs-1"></i><p class="mb-0">YouTube</p></div></button></div>
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnSpotify"><div class="text-center"><i class="bi bi-spotify fs-1"></i><p class="mb-0">Spotify</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileDash" disabled><div class="text-center"><i class="bi bi-speedometer fs-1"></i><p class="mb-1">Dash</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileLed" disabled><div class="text-center"><i class="bi bi-lightbulb fs-1"></i><p class="mb-1">Ledy</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTilePump" disabled><div class="text-center"><i class="bi bi-droplet fs-1"></i><p class="mb-1">Sport</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileMusicPlaylist"><div class="text-center"><i class="bi bi-music-note-list fs-1"></i><p class="mb-1">Playlisty</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnYouTube" disabled><div class="text-center"><i class="bi bi-youtube fs-1"></i><p class="mb-1">YouTube</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnSpotify" disabled><div class="text-center"><i class="bi bi-spotify fs-1"></i><p class="mb-1">Spotify</p></div></button></div>
 							</div>
 							<div id="screen2" class="row" style="display: none;">
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileFiles"><div class="text-center"><i class="bi bi-folder fs-1"></i><p class="mb-0">Files</p></div></button></div>
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileTest"><div class="text-center"><i class="bi bi-diagram-3 fs-1"></i><p class="mb-0">Test</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileFiles" disabled><div class="text-center"><i class="bi bi-folder fs-1"></i><p class="mb-1">Pliki</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileTest" disabled><div class="text-center"><i class="bi bi-diagram-3 fs-1"></i><p class="mb-1">Test</p></div></button></div>
 							</div>
 							<div id="screen3" class="row" style="display: none;">
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileSettings"><div class="text-center"><i class="bi bi-sliders fs-1"></i><p class="mb-0">Settings</p></div></button></div>
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileLogs"><div class="text-center"><i class="bi bi-card-list fs-1"></i><p class="mb-0">Logs</p></div></button></div>
-								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileDebug"><div class="text-center"><i class="bi bi-bug fs-1"></i><p class="mb-0">Debug</p></div></button></div>
-
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileSettings"><div class="text-center"><i class="bi bi-sliders fs-1"></i><p class="mb-1">Ustawienia</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileLogs"><div class="text-center"><i class="bi bi-card-list fs-1"></i><p class="mb-1">Logi</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileSensors"><div class="text-center"><i class="bi bi-activity fs-1"></i><p class="mb-1">Stan czujników</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileSCM" disabled><div class="text-center"><i class="bi bi-cpu fs-1"></i><p class="mb-1">System Control Module</p></div></button></div>
+								<div class="col-sm-3"><button class="btn btn-tile" id="btnTileDebug"><div class="text-center"><i class="bi bi-bug fs-1"></i><p class="mb-1">Debug</p></div></button></div>
 							</div>
 							
 							<div class="screen-control">
 								<button class="screen-button active" onclick="goToScreen(0)"><i class="bi bi-speedometer2"></i></button>
-								<button class="screen-button" onclick="goToScreen(1)"><i class="bi bi-display"></i></button>
-								<button class="screen-button" onclick="goToScreen(2)"><i class="bi bi-window"></i></button>
+								<button class="screen-button" onclick="goToScreen(1)"><i class="bi bi-folder2-open"></i></button>
+								<button class="screen-button" onclick="goToScreen(2)"><i class="bi bi-sliders"></i></button>
 							</div>
 							
 						</div>
 						<div class="col-1"></div>
 					</div>
 
-					<!-- right content /-->
+					<!-- Left content /-->
 					<div class="bg-light p-2 rounded mt-1" id="menuDash" style="display: none;">
 						<div class="row">
 							<div class="col-sm-6">
@@ -184,10 +177,10 @@
 						</div>
 					</div>
 
-					<div class="bg-light p-4 rounded mt-1" id="menuMusicPlaylist" style="display: none;">
+					<div class="bg-light p-4 rounded mt-1 full-view" id="menuMusicPlaylist" style="display: none;">
 						<div class="row">
 							<div class="col-12">
-								<h4 class="fw-bold">Music Playlist</h4>
+								<h4 class="fw-bold">Playlisty</h4>
 								<div class="mt-3 row playlists text-dark"></div>
 							</div>
 						</div>
@@ -243,16 +236,6 @@
 							</script>
 						</div>
 					</div>
-
-					<div class="bg-light p-4 rounded mt-1" id="menuDashcam" style="display: none;">
-						<div class="row">
-							<div class="col-12">
-								<h4 class="fw-bold mb-4">DashCam</h4>
-							</div>
-						</div>
-						<div class="row dashcam_files"></div>
-					</div>
-					
 					
 					
 
@@ -275,14 +258,13 @@
 							</div>
 						</div>
 					</div>
-
 					<div class="bg-light p-4 rounded mt-1" id="menuTest" style="display: none;">
 						<div class="row">
 							<h4 class="fw-bold">Tests</h4>
 
 							<div class="col-12">
 								<div class="input-group mt-3">
-									<input type="text" id="searchInput" class="form-control" placeholder="Wyszukaj filmy na YouTube">
+									<input type="text" id="searchInput" class="form-control" placeholder="Wyszukaj filmy na YouTube" onclick="toggleKeyboard(this.id)">
 									<button class="btn btn-primary" onclick="searchVideos()">Szukaj</button>
 								</div>
 								
@@ -298,41 +280,53 @@
 
 
 
-					<div class="bg-light p-4 rounded mt-1" id="menuDebug" style="display: none;">
+					<div class="bg-light p-4 rounded mt-1" id="menuSettings" style="display: none;">
 						<div class="row">
 							<div class="col-12">
-								<h4 class="fw-bold">Debug Info</h4>
-								<div class="mt-3 text-center">
-									<button type="button" class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#sysinfoModal">System Info</button>
-									<button type="button" class="btn btn-warning m-2" data-bs-toggle="modal" data-bs-target="#gpsinfoModal">GPS Info</button>
-									<button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#carinfoModal">Car Info</button>
-									<button type="button" class="btn btn-danger m-2" data-bs-toggle="modal" data-bs-target="#powerinfoModal">Power Info</button>
-									<button type="button" class="btn btn-info m-2" data-bs-toggle="modal" data-bs-target="#scminfoModal">SCM Info</button>
+								<h4 class="fw-bold mb-4">Ustawienia</h4><hr />
+								<div class="d-flex flex-wrap justify-content-between align-items-start">
+									<!-- Display -->
+									<div class="category-buttons mb-4">
+										<h5 class="fw-bold">Wyświetlacz</h5>
+										<div class="d-grid gap-2">
+											<button class="btn btn-primary" onclick="menuAction('fullscreen')"><i class="bi bi-arrows-fullscreen"></i> Pełny ekran</button>
+											<button class="btn btn-secondary" onclick="menuAction('exit_fullscreen')"><i class="bi bi-fullscreen-exit"></i> Zakończ pełny ekran</button>
+										</div>
+									</div>
+							
+									<!-- Navigation -->
+									<div class="category-buttons mb-4">
+										<h5 class="fw-bold">Nawigacja</h5>
+										<div class="d-grid gap-2">
+											<button class="btn btn-info" onclick="menuAction('refresh')"><i class="bi bi-arrow-clockwise"></i> Odśwież</button>
+											<button class="btn btn-warning" onclick="menuAction('close_browser')"><i class="bi bi-x-circle"></i> Zamknij przeglądarkę</button>
+										</div>
+									</div>
+							
+									<!-- System -->
+									<div class="category-buttons mb-4">
+										<h5 class="fw-bold">System</h5>
+										<div class="d-grid gap-2">
+											<button class="btn btn-success" onclick="menuAction('restart')"><i class="bi bi-arrow-clockwise"></i> Uruchom ponownie</button>
+											<button class="btn btn-danger" onclick="menuAction('shutdown')"><i class="bi bi-power"></i> Zatrzymaj</button>
+											<button class="btn btn-dark" onclick="menuAction('sleep')"><i class="bi bi-moon"></i> Uśpij</button>
+										</div>
+									</div>
 								</div>
-								<hr />
-								<details>
-									<summary class="btn btn-info">Debug value <i class="bi bi-caret-down-fill"></i></summary>
-									<div class="my-3">
-									  <span class="badge bg-secondary">USB Mounted: <span id="debugUsbMounted">NONE</span></span>
-									</div>
-									<div class="my-3">
-									  <span class="badge bg-secondary">Settings: <span id="debugSettings">NONE</span></span>
-									</div>
-								</details>
 							</div>
 						</div>
 					</div>
 					<div class="bg-light p-4 rounded mt-1" id="menuLogs" style="display: none;">
 						<div class="row">
-							<div class="col-12" id="logs-scrollable">
-								<h4 class="fw-bold">Logs</h4>
+							<div class="col-12" id="scrollable">
+								<h4 class="fw-bold mb-4">Logi</h4><hr />
 								<table class="table table-sm table-striped text-center">
 									<thead class="thead-dark">
 										<tr>
-											<th scope="col">Time</th>
-											<th scope="col">Type</th>
-											<th scope="col">Source</th>
-											<th scope="col">Message</th>
+											<th scope="col">Czas</th>
+											<th scope="col">Typ</th>
+											<th scope="col">Źródło</th>
+											<th scope="col">Wiadomość</th>
 										</tr>
 									</thead>
 									<tbody class="logs">
@@ -342,72 +336,168 @@
 							</div>
 						</div>
 					</div>
-					<div class="bg-light p-4 rounded mt-1" id="menuSettings" style="display: none;">
+					<div class="bg-light p-4 rounded mt-1" id="menuSensors" style="display: none;">
 						<div class="row">
 							<div class="col-12">
-								<h4 class="fw-bold mb-4">Settings</h4>
-								<div class="d-flex flex-wrap justify-content-between align-items-start">
-									<div class="category-buttons mb-4">
-										<h5 class="fw-bold">Display</h5>
-										<div class="d-grid gap-2">
-											<button class="btn btn-primary" onclick="menuAction('fullscreen')"><i class="bi bi-arrows-fullscreen"></i> Fullscreen</button>
-											<button class="btn btn-secondary" onclick="menuAction('exit_fullscreen')"><i class="bi bi-fullscreen-exit"></i> Exit Fullscreen</button>
-										</div>
-									</div>
-									<div class="category-buttons mb-4">
-										<h5 class="fw-bold">Navigation</h5>
-										<div class="d-grid gap-2">
-											<button class="btn btn-info" onclick="menuAction('refresh')"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
-											<button class="btn btn-warning" onclick="menuAction('close_browser')"><i class="bi bi-x-circle"></i> Close Browser</button>
-										</div>
-									</div>
-									<div class="category-buttons mb-4">
-										<h5 class="fw-bold">System</h5>
-										<div class="d-grid gap-2">
-											<button class="btn btn-success" onclick="menuAction('restart')"><i class="bi bi-arrow-clockwise"></i> Restart</button>
-											<button class="btn btn-danger" onclick="menuAction('shutdown')"><i class="bi bi-power"></i> Shutdown</button>
-										</div>
-									</div>
-									<div class="category-buttons mb-4">
-										<h5 class="fw-bold">Camera</h5>
-										<div class="d-grid gap-2">
-											<button class="btn btn-danger" onclick="menuAction('start_recording')"><i class="bi bi-record-circle"></i> Start Recording</button>
-											<button class="btn btn-secondary" onclick="menuAction('stop_recording')"><i class="bi bi-stop-circle"></i> Stop Recording</button>
-										</div>
-									</div>
-									<div class="category-buttons">
-										<h5 class="fw-bold">Volume</h5>
-										<div class="d-grid gap-2">
-											<div class="d-flex align-items-center mb-2">
-												<label class="fw-bold me-2">Music</label>
-												<input type="range" class="form-range" min="0" max="100" id="musicVolume" oninput="updateVolumeLabel('musicVolume', 'musicVolumeValue')">
-												<span id="musicVolumeValue" class="ms-2">50</span>
-											</div>
-											<div class="d-flex align-items-center mb-2">
-												<label class="fw-bold me-2">Navigation</label>
-												<input type="range" class="form-range" min="0" max="100" id="navVolume" oninput="updateVolumeLabel('navVolume', 'navVolumeValue')">
-												<span id="navVolumeValue" class="ms-2">50</span>
-											</div>
-											<div class="d-flex align-items-center mb-2">
-												<label class="fw-bold me-2">Notifications</label>
-												<input type="range" class="form-range" min="0" max="100" id="notifVolume" oninput="updateVolumeLabel('notifVolume', 'notifVolumeValue')">
-												<span id="notifVolumeValue" class="ms-2">50</span>
-											</div>
-											<button class="btn btn-secondary" onclick="muteAll()">
-												<i class="bi bi-volume-mute"></i> Mute
-											</button>
-										</div>
-									</div>
+								<h4 class="fw-bold mb-4">Stan czujników</h4><hr />
+								<div class="table-responsive" id="scrollable">
+									<table class="table table-striped table-hover text-center">
+										<thead class="thead-dark">
+											<tr>
+												<th><i class="bi bi-thermometer"></i> Czujnik</th>
+												<th><i class="bi bi-box-arrow-up-right"></i> ID Modułu</th>
+												<th><i class="bi bi-arrow-up-circle"></i> Wartość</th>
+												<th><i class="bi bi-patch-check"></i> Jednostka</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>Czujnik Temperatury 1</td>
+												<td><span class="badge badge-primary text-dark">DS18B20_1</span></td>
+												<td>22</td>
+												<td>°C</td>
+											</tr>
+											<tr>
+												<td>Czujnik Wilgotności 1</td>
+												<td><span class="badge badge-primary text-dark">DHT22_1</span></td>
+												<td>40</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Ciśnienia 1</td>
+												<td><span class="badge badge-primary text-dark">BMP180_1</span></td>
+												<td>1012</td>
+												<td>hPa</td>
+											</tr>
+											<tr>
+												<td>Czujnik Światła 1</td>
+												<td><span class="badge badge-primary text-dark">TSL2561_1</span></td>
+												<td>350</td>
+												<td>lux</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+											<tr>
+												<td>Czujnik Poziomu Wody 1</td>
+												<td><span class="badge badge-primary text-dark">HYDRO1</span></td>
+												<td>80</td>
+												<td>%</td>
+											</tr>
+										</tbody>
+									</table>
 								</div>
 							</div>
 						</div>
 					</div>
+					<div class="bg-light p-4 rounded mt-1" id="menuDebug" style="display: none;">
+						<div class="row">
+							<div class="col-12">
+								<h4 class="fw-bold mb-4">Debug Info</h4><hr />
+								<div class="mt-3 text-center">
+									<!-- Przyciski obok siebie -->
+									<div class="d-flex justify-content-center flex-wrap mb-3">
+										<button type="button" class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#sysinfoModal">System Info</button>
+										<button type="button" class="btn btn-warning m-2" data-bs-toggle="modal" data-bs-target="#gpsinfoModal">GPS Info</button>
+										<button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#carinfoModal">Can Info</button>
+										<button type="button" class="btn btn-info m-2" data-bs-toggle="modal" data-bs-target="#ethernetinfoModal">LAN Info</button>
+										<button type="button" class="btn btn-danger m-2" data-bs-toggle="modal" data-bs-target="#scminfoModal">SCM Info</button>
+									</div>
+								</div>
+							
+								<hr />
+								<!-- Sekcja Debug i ustawienia -->
+								<details>
+									<summary class="btn btn-info">Debug value <i class="bi bi-caret-down-fill"></i></summary>
+									<div class="my-3">
+										<span class="badge bg-secondary">USB Mounted: <span id="debugUsbMounted">NONE</span></span>
+									</div>
+									<div class="my-3">
+										<span class="badge bg-secondary">Settings: <span id="debugSettings">NONE</span></span>
+									</div>
+								</details>
+							</div>
+							
+						</div>
+					</div>
+					
+					
+					
 					
 
 
 
 
-					<div class="bg-dark p-2 rounded mt-1" id="menuCamera" style="display: none;">
+					<div class="bg-dark p-2 rounded mt-1 full-view" id="menuCamera" style="display: none;">
 						<div class="row">
 							<div class="col-12 d-flex justify-content-center align-items-center">
 								<div class="camera">
@@ -416,47 +506,89 @@
 							</div>
 						</div>
 					</div>
-					<div class="bg-light p-4 rounded mt-3" id="menuClimate" style="display: none;">
+					<div class="bg-light p-4 rounded mt-1 full-view" id="menuClimate" style="display: none;">
 						<div class="row">
+
 							<div class="col-12">
-								<h4 class="text-center mb-3">Climate</h4>
-								<div class="table-responsive">
-									<table class="table table-striped table-hover text-center">
-										<thead class="thead-dark">
-											<tr>
-												<th><i class="bi bi-speedometer"></i></th>
-												<th><i class="bi bi-thermometer"></i></th>
-												<th><i class="bi bi-droplet"></i></th>
-												<th><i class="bi bi-geo-alt"></i></th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>Czujnik1 <span class="badge badge-primary text-dark">DS18B20_1</span></td>
-												<td>22°C</td>
-												<td>40%</td>
-												<td><i class="bi bi-car-front"></i></td>
-											</tr>
-											<tr>
-												<td>Czujnik2 <span class="badge badge-primary text-dark">DS18B20_2</span></td>
-												<td>18°C</td>
-												<td>-</td>
-												<td><i class="bi bi-cloud"></i></td>
-											</tr>
-										</tbody>
-									</table>
+								<h4 class="fw-bold mb-4">Klimatyzacja</h4>
+								<div class="card bg-light text-dark p-4 shadow-sm rounded-4 border">
+									
+									<div class="row align-items-center mb-4 text-center">
+										<!-- Temperatura -->
+										<div class="col-6">
+											<div class="display-4 fw-bold" id="ac-temperature">22°C</div>
+											<div class="btn-group mt-3 shadow-sm">
+												<button class="btn btn-outline-secondary px-5 py-3 fs-4" id="temp-down"><i class="bi bi-dash-lg"></i></button>
+												<button class="btn btn-outline-secondary px-5 py-3 fs-4" id="temp-up"><i class="bi bi-plus-lg"></i></button>
+											</div>
+										</div>
+
+										<!-- Temperatura wewnętrzna -->
+										<div class="col-6">
+											<div class="h5">Temperatura wewnętrzna</div>
+											<div class="display-6 fw-bold" id="internal-temperature">20°C</div>
+										</div>
+									</div>
+							
+									<!-- Przełączniki -->
+									<div class="row text-center g-3 mb-4">
+										<div class="col-6 col-md-4">
+											<button class="btn btn-outline-info w-100 shadow-sm fs-4 py-3" id="ac-toggle"><i class="bi bi-snow"></i> A/C</button>
+										</div>
+										<div class="col-6 col-md-4">
+											<button class="btn btn-outline-warning w-100 shadow-sm fs-4 py-3" id="auto-toggle"><i class="bi bi-cpu"></i> AUTO</button>
+										</div>
+										<div class="col-6 col-md-4">
+											<button class="btn btn-outline-secondary w-100 shadow-sm fs-4 py-3" id="recirc-toggle"><i class="bi bi-arrow-repeat"></i> Recyrkulacja</button>
+										</div>
+									</div>
+							
+									<!-- Ogrzewanie tylnej szyby -->
+									<div class="row text-center mb-4">
+										<div class="col">
+											<button class="btn btn-outline-danger w-100 shadow-sm fs-4 py-3" id="rear-window-heating"><i class="bi bi-thermometer-sun"></i> Ogrzewanie tylnej szyby</button>
+										</div>
+									</div>
+							
+									<!-- Wentylator -->
+									<div class="row align-items-center mb-4">
+										<div class="col-2 text-end">
+											<i class="bi bi-fan fs-3"></i>
+										</div>
+										<div class="col-8">
+											<input type="range" class="form-range" min="0" max="5" value="2" id="fan-speed">
+										</div>
+										<div class="col-2">
+											<span id="fan-level" class="badge bg-info text-dark fs-6 px-3">2</span>
+										</div>
+									</div>
+							
+									<!-- Kierunek nawiewu -->
+									<!--<div class="row text-center g-3">
+										<div class="col-4">
+											<button class="btn btn-outline-primary w-100 shadow-sm fs-4 py-3" id="dir-face"><i class="bi bi-emoji-smile"></i> Twarz</button>
+										</div>
+										<div class="col-4">
+											<button class="btn btn-outline-primary w-100 shadow-sm fs-4 py-3" id="dir-feet"><i class="bi bi-boots"></i> Nogi</button>
+										</div>
+										<div class="col-4">
+											<button class="btn btn-outline-primary w-100 shadow-sm fs-4 py-3" id="dir-windshield"><i class="bi bi-aspect-ratio"></i> Szyba</button>
+										</div>
+									</div>-->
 								</div>
 							</div>
+							
+							
 						</div>
 					</div>
-
-
 				</div>
 				
 
-				<!-- right menu /-->
+				<!-- Right menu /-->
 				<div class="col-4 p-0 text-center">
-					<div class="bg-dark text-light p-3" id="musicDiv" style="height: 500px;">
+					<!-- Panel: Odtwarzacz muzyki -->
+					<div class="bg-dark text-light p-3 full-view" id="musicDiv">
+
 						<h2 class="fw-bold mb-4" id="PlayerTitle">Song Title</h2>
 						<h4 class="mb-3" id="PlayerAuthor">Song Author</h4>
 						<p class="lead mb-4"><span id="PlayerNow">00:00</span> / <span id="PlayerTime">00:00</span></p>
@@ -465,42 +597,68 @@
 							<div class="row text-center" id="PlayerList"></div>
 						</div>
 					</div>
-					<div class="bg-dark text-light p-1" id="navDiv" style="height: 500px; display: none;">
-						<div class="container-fluid h-100">
-							<div class="row h-100">
-								<div class="col-md-5 bg-dark p-4">
-									<h2 class="fw-bold mb-4">Navigation</h2>
-									<div class="current-location mb-4">
-										<h3 class="mb-3">Current Location</h3>
-										<p>123 Main Street, City, Country</p>
-									</div>
-									<div class="route-info mb-4">
-										<h3 class="mb-3">Route Information</h3>
-										<p>Distance: 10 miles</p>
-										<p>Estimated Time: 30 minutes</p>
-									</div>
-									<div class="destination">
-										<h3 class="mb-3">Destination</h3>
-										<input type="text" class="form-control mb-2" placeholder="Enter destination...">
-										<button class="btn btn-primary">Go</button>
-									</div>
+
+					<!-- Panel: Stan drzwi / klap -->
+					<div class="bg-dark text-light p-4 shadow-sm full-view" id="carStateDiv" style="display: none;">
+						<h3 class="fw-bold mb-4 text-center">Stan drzwi i klap</h3>
+						<div class="row g-3">
+							<div class="col-md-6">
+								<div class="card bg-success text-dark shadow-sm p-3">
+									<p class="mb-0"><i class="bi bi-door-open"></i> Drzwi lewe przednie:
+										<span id="doorFrontLeft" class="fw-bold">Zamknięte</span>
+									</p>
 								</div>
-								<div class="col-md-7 bg-light p-0">
-									<div id="map" style="height: 100%;"></div>
+							</div>
+							<div class="col-md-6">
+								<div class="card bg-success text-dark shadow-sm p-3">
+									<p class="mb-0"><i class="bi bi-door-open"></i> Drzwi prawe przednie:
+										<span id="doorFrontRight" class="fw-bold">Zamknięte</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card bg-success text-dark shadow-sm p-3">
+									<p class="mb-0"><i class="bi bi-door-open"></i> Drzwi lewe tylne:
+										<span id="doorRearLeft" class="fw-bold">Zamknięte</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card bg-success text-dark shadow-sm p-3">
+									<p class="mb-0"><i class="bi bi-door-open"></i> Drzwi prawe tylne:
+										<span id="doorRearRight" class="fw-bold">Zamknięte</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card bg-success text-dark shadow-sm p-3">
+									<p class="mb-0"><i class="bi bi-truck"></i> Klapa bagażnika:
+										<span id="trunk" class="fw-bold">Zamknięta</span>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card bg-danger text-dark shadow-sm p-3">
+									<p class="mb-0"><i class="bi bi-gear-wide-connected"></i> Maska:
+										<span id="hood" class="fw-bold">Otwarta</span>
+									</p>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="bg-brown text-light p-1" id="telDiv" style="height: 505px; display: none;">
+					
+					<!-- Panel: Telefon / Alerty -->
+					<!--<div class="bg-brown text-light p-1 full-view" id="telDiv" style="display: none;">
 						<div class="alert alert-warning" role="alert">Niski poziom wody! - 12:34:27</div>
 						<div class="alert alert-warning" role="alert">Niski poziom wody! - 12:34:27</div>
 						<div class="alert alert-warning" role="alert">Niski poziom wody! - 12:34:27</div>
 						<div class="alert alert-warning" role="alert">Niski poziom wody! - 12:34:27</div>
-						
-					</div>
+					</div>-->
 				</div>
+
 			</div>
 		</main>
+
 
 		<div class="keyboard-container" id="keyboard">
 			<div class="row justify-content-center">
@@ -565,7 +723,7 @@
 			</div>
 		</div>
 
-		<!-- Modal Templates -->
+
 		<!-- Sysinfo Modal -->
 		<div class="modal fade" id="sysinfoModal" tabindex="-1" aria-labelledby="sysinfoModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-xl">
@@ -661,8 +819,8 @@
 			</div>
 		</div>
 		
-		
-		<!-- bottom buttons /-->
+
+		<!-- Bottom buttons /-->
 		<footer class="footer fixed-bottom mt-auto bg-dark text-light">
 			<div class="container-fluid">
 				<div class="row">
@@ -679,152 +837,43 @@
 					<div class="col-sm-4">
 						<div class="row">
 							<button class="col-sm-4 btn btn-footer btn-lg btn-block" style="border-radius: 0px;" id="btnMenuMusic"><i class="bi bi-music-note-beamed" style="font-size: 2rem;"></i></button>
-							<button class="col-sm-4 btn btn-footer btn-lg btn-block" style="border-radius: 0px;" id="btnMenuNav"><i class="bi bi-sign-turn-right" style="font-size: 2rem;"></i></button>
-							<button class="col-sm-4 btn btn-footer btn-lg btn-block" style="border-radius: 0px;" id="btnMenuTel"><i class="bi bi-telephone" style="font-size: 2rem;"></i></button>
+							<button class="col-sm-4 btn btn-footer btn-lg btn-block" style="border-radius: 0px;" id="btnMenuCarState"><i class="bi bi-car-front" style="font-size: 2rem;"></i></button>
+							<button class="col-sm-4 btn btn-footer btn-lg btn-block" style="border-radius: 0px;" id="btnScreenOff"><i class="bi bi-moon" style="font-size: 2rem;"></i></button>
 						</div>
 					</div>
 				</div>
 			  </div>
 		</footer>
 
-		<script src="/JS/Functions.js"></script>
-		<script src="/JS/Manager/USB.js"></script>
-		<script src="/JS/Manager/Keyboard.js"></script>
 
-		<script src="/JS/Camera.js"></script>
+
+		<script src="/js/main.js"></script>
+		<script src="/js/navbar.js"></script>
+
+
+		<script src="/js/keyboard.js"></script>
+		<script src="/js/camera.js"></script>
+		<script src="/js/climate.js"></script>
+
+
+		<script src="/js/content.js"></script>
+		<script defer src="/js/content/music-player.js"></script>
+
 		
 
-		<script src="/JS/Manager/Gauge.js"></script>
-		<script src="/JS/Manager/MediaOnline.js"></script>
+		<script src="/library/gauge.js"></script>
 
-		<script src="https://www.youtube.com/iframe_api"></script>
+		<!--<script src="/JS/Functions.js"></script>-->
+		<!--<script src="/JS/Manager/USB.js"></script>-->
 		
 
 		<script>
 			$(document).ready(function(){
 			  $(".GaugeMeter").gaugeMeter();
 			});
-
-			// Wywołanie funkcji fetchData co 5 sekund
-			fetchData();
-			DashCam_Files();
-			setInterval(fetchData, 5000);
-			setInterval(DashCam_Files, 10000);
-
-			// Definicja przycisków i przypisanych do nich menu
-			const buttonsAndMenus = [
-					{ id: "btnMenuBack", menu: "menuTile" },
-					{ id: "btnTileDash", menu: "menuDash" },
-					{ id: "btnTileLed", menu: "menuLed" },
-					{ id: "btnTilePump", menu: "menuPump" },
-					{ id: "btnTileDebug", menu: "menuDebug" },
-					{ id: "btnTileFiles", menu: "menuFiles" },
-					{ id: "btnTileLogs", menu: "menuLogs" },
-					{ id: "btnMenuCamera", menu: "menuCamera" },
-					{ id: "btnTileSettings", menu: "menuSettings" },
-					{ id: "btnSpotify", menu: "menuSpotify" },
-					{ id: "btnYouTube", menu: "menuYouTube" },
-					{ id: "btnTileMusicPlaylist", menu: "menuMusicPlaylist" },
-					{ id: "btnTileDashcam", menu: "menuDashcam" },
-					{ id: "btnMenuClimate", menu: "menuClimate" },
-					{ id: "btnTileTest", menu: "menuTest" }
-				];
-
-			// Funkcja do zmiany widoczności menu
-			function toggleMenu(menuId){
-				buttonsAndMenus.forEach(buttonAndMenu => {
-					const displayStyle = buttonAndMenu.menu === menuId ? (menuId === "menuTile" ? 'flex' : 'block') : 'none';
-					document.getElementById(buttonAndMenu.menu).style.display = displayStyle;
-					console.log(buttonAndMenu.menu);
-				});
-			}
-
-				// Dodawanie nasłuchiwania zdarzeń dla przycisków
-			buttonsAndMenus.forEach(buttonAndMenu => {
-				document.getElementById(buttonAndMenu.id).addEventListener('click', () => {
-					toggleMenu(buttonAndMenu.menu);
-				});
-			});
 		</script>
 
 
-		<script>
-			// Inicjalizacja mapy Leaflet
-			var mymap = L.map('map').setView([51.505, -0.09], 13);
-
-			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-			}).addTo(mymap);
-
-			// Dodanie markera
-			L.marker([51.5, -0.09]).addTo(mymap)
-				.bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-				.openPopup();
-		</script>
-
-		<script>
-			// Get value of input color to table
-			$(document).ready(function(){
-				$('#LedUnder').change(function(){
-					val = hexToRgb($(this).val());
-					color = val.r+", "+val.g+", "+val.b;
-					document.getElementById("ValueLedUnder").innerHTML = color+" / "+$(this).val();
-					console.log(val);
-				});
-
-				$('#LedLeft').change(function(){
-					val = hexToRgb($(this).val());
-					color = val.r+", "+val.g+", "+val.b;
-					document.getElementById("ValueLedLeft").innerHTML = color+" / "+$(this).val();
-					console.log(val);
-				});
-
-				$('#LedRight').change(function(){
-					val = hexToRgb($(this).val());
-					color = val.r+", "+val.g+", "+val.b;
-					document.getElementById("ValueLedRight").innerHTML = color+" / "+$(this).val();
-					console.log(val);
-				});
-			});
-
-
-			clickLedStip = 0;
-			clickPumpFan = 0;
-    		$('.btn-block').click(function(event){
-    			//alert(this.id);
-
-				switch(this.id){
-					case "btnLedStrip":
-						clickLedStip++;
-						document.getElementById("ValueLedStrip").innerHTML = "Toggled "+clickLedStip;
-						break;
-					case "btnPumpFan":
-						clickPumpFan++;
-						document.getElementById("ValuePumpFan").innerHTML = "Toggled "+clickPumpFan;
-						break;
-					default: console.log("Didn't find value of function button");
-				}
-
-				switch(this.id){
-					case "btnMenuMusic":
-						document.getElementById('musicDiv').style.display = "block";
-						document.getElementById('navDiv').style.display = "none";
-						document.getElementById('telDiv').style.display = "none";
-						break;
-					case "btnMenuNav":
-						document.getElementById('musicDiv').style.display = "none";
-						document.getElementById('navDiv').style.display = "block";
-						document.getElementById('telDiv').style.display = "none";
-						break;
-					case "btnMenuTel":
-						document.getElementById('musicDiv').style.display = "none";
-						document.getElementById('navDiv').style.display = "none";
-						document.getElementById('telDiv').style.display = "block";
-						break;
-					default: console.log("Didn't find value of short menu");
-				}
-    		});
-		</script>
-		<script src="Bootstrap/JS/bootstrap.bundle.min.js"></script>
+		<script src="library/bootstrap/JS/bootstrap.bundle.min.js"></script>
 	</body>
 </html>

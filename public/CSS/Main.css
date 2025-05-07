@@ -1,3 +1,29 @@
+.full-view{
+    height: 90vh; /* Ustala wysokość na 100% wysokości widoku */
+    width: 100%;   /* Ustala szerokość na 100% dostępnej przestrzeni */
+    overflow-y: auto; /* Jeśli zawartość jest za wysoka, dodaj przewijanie */
+    box-sizing: border-box; /* Uwzględnia padding w wymiarach */
+}
+
+#scrollable {
+    max-height: 73vh !important;
+    overflow-y: scroll !important;
+}
+
+#scrollable::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+#scrollable::-webkit-scrollbar-thumb {
+    background-color: #6c757d !important;
+    border-radius: 10px !important;
+}
+
+
+
+
+
+
 #menuTile{
     margin-top: 10px;
 }
@@ -81,35 +107,6 @@
 
 
 
-#logs-scrollable {
-    max-height: 435px !important;
-    overflow-y: scroll !important;
-}
-
-#logs-scrollable::-webkit-scrollbar {
-    width: 8px !important;
-}
-
-#logs-scrollable::-webkit-scrollbar-thumb {
-    background-color: #6c757d !important;
-    border-radius: 10px !important;
-}
-
-
-
-.dashcam_files {
-    max-height: 435px !important;
-    overflow-y: scroll !important;
-}
-
-.dashcam_files::-webkit-scrollbar {
-    width: 8px !important;
-}
-
-.dashcam_files::-webkit-scrollbar-thumb {
-    background-color: #6c757d !important;
-    border-radius: 10px !important;
-}
 
 
 

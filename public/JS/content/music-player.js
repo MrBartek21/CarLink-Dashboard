@@ -19,7 +19,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	// (B) FUNCTION TO LOAD PLAYLIST
 	const loadPlaylist = (playlistName) => {
-		fetch('/playlist/' + playlistName)
+		fetch('/playlists/' + playlistName)
 		.then(response => response.json())
 		.then(data => {
 			playlist = data;
@@ -56,7 +56,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	
 
 	// Pobranie listy playlist
-	fetch('/getSettings')
+	fetch('/system/settings')
 		.then(response => response.json())
 		.then(dataSettings => {
 			// Pobranie listy playlists
@@ -128,7 +128,7 @@ window.addEventListener("DOMContentLoaded", () => {
 			});
 
 
-			fetch('/playlist/'+dataSettings.defaultPlaylist)
+			fetch('/playlists/'+dataSettings.defaultPlaylist)
 				.then(response => response.json())
 				.then(dataPlaylistFile => {
 					playlist = dataPlaylistFile;

@@ -76,7 +76,7 @@ class SystemInfo{
         }
     }
 
-    static getMemoryUsage(){6
+    static getMemoryUsage(){
         let MemoryUsage = {
             totalMemory: 'N/A',
             freeMemory: 'N/A',
