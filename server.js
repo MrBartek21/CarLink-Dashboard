@@ -31,6 +31,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const TITLE = "Main Page · CarLink v9"
 // Ścieżka do folderu z muzyką
 const musicDir = path.join(__dirname, 'Files_Music');
 const settingsFile = 'settings.json';
@@ -321,8 +322,17 @@ app.get('/files/*', (req, res) => {
 */
 
 
+// Ustawienie katalogu z widokami
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
 // Ustawienie folderu, z którego będą serwowane pliki HTML i inne zasoby statyczne
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Strona główna
+app.get('/', (req, res) => {
+    res.render('index', { title: TITLE });
+  });
 
 // Startowanie serwera
 app.listen(PORT, () => {
